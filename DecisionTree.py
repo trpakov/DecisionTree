@@ -10,6 +10,7 @@ class DecisionTreeGenerator:
         self.data = data
         self.numOfInputVars = data.iloc[0,0:-1].count()
         self.classes = set(data.iloc[:,-1])
+        self.checkForCategoricalData()
         self.tree = None
 
     def checkIfOnlyOneClass(self, data):      
@@ -69,6 +70,11 @@ class DecisionTreeGenerator:
             distances[i] = abs(numOfClassRecordsLeft/totalNumOfRecords - numOfClassRecordsRight/totalNumOfRecords)
 
         return 2 * prod(proportions) * sum(distances)
+
+    def checkForCategoricalData(self):
+        for c in self.data.columns:
+            if self.data[c].nunique()/self.data[c].count() < 0.05:
+                self.data = self.data.astype({c:'category'})
 
            
 
