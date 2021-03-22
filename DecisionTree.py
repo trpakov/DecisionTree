@@ -8,7 +8,8 @@ class DecisionTreeGenerator:
 
     def __init__(self, data):
         self.data = data
-        self.numOfInputVars = data.iloc[0,0:-1].count()
+        self.inputVars = list(data)[:-1]
+        # self.numOfInputVars = data.iloc[0,0:-1].count()
         self.classes = set(data.iloc[:,-1])
         self.checkForCategoricalData()
         self.tree = None
@@ -33,7 +34,7 @@ class DecisionTreeGenerator:
         denominator = len(data)
         numOfRecordsInEachClass = self.getNumberOfRecordsInEachClass(data)
         probabilities = [x[1]/denominator for x in numOfRecordsInEachClass]
-        entropy = -sum([x * log2(x) for x in probabilities])
+        entropy = -sum([x * (log2(x) if x>0 else 0) for x in probabilities])
         return entropy
 
     def calculateInformationGain(self, data, dataSubsets):
@@ -42,8 +43,8 @@ class DecisionTreeGenerator:
         denominator = len(data)  
         entropiesAfterSplit = [self.calculateEntopy(x) for x in dataSubsets]
         subsetProportions = [len(x)/denominator for x in dataSubsets ]
-        weightedSumOfEntropies = -sum([x*y for x,y in zip(entropiesAfterSplit, subsetProportions)])
-        
+        weightedSumOfEntropies = sum([x*y for x,y in zip(entropiesAfterSplit, subsetProportions)])
+
         informationGain = entropyBeforeSplit - weightedSumOfEntropies
         return informationGain
 
@@ -73,8 +74,33 @@ class DecisionTreeGenerator:
 
     def checkForCategoricalData(self):
         for c in self.data.columns:
-            if self.data[c].nunique()/self.data[c].count() < 0.05:
+            if str(self.data[c].dtype) != 'category' and self.data[c].nunique()/self.data[c].count() < 0.05:
                 self.data = self.data.astype({c:'category'})
+
+    def splitData(self, data, availableAttributes):
+        bestGain = -np.inf
+        bestSubsets = None
+        splitAttrib = None
+
+        for attr in availableAttributes:
+            if str(data[attr].dtype) == 'object':
+                grouped = data.groupby(attr)
+                subsets = [grouped.get_group(x) for x in data[attr].unique()]
+                infoGain = self.calculateInformationGain(data, subsets)
+
+                if infoGain > bestGain:
+                    bestGain = infoGain
+                    bestSubsets = subsets
+                    splitAttrib = attr
+
+            else:
+                # Not Implemented
+                continue
+
+        return (splitAttrib, bestSubsets)
+
+
+
 
            
 
