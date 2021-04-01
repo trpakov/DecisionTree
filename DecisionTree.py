@@ -87,23 +87,41 @@ class DecisionTreeGenerator:
         bestGain = -np.inf
         bestSubsets = None
         splitAttrib = None
+        bestSplitThreshold = None
 
         for attr in availableAttributes:
-            if str(data[attr].dtype) == 'object':
+            # if attr is discrete attribute with z values
+            if str(data[attr].dtype) == 'object' or str(data[attr].dtype) == 'category':
                 grouped = data.groupby(attr)
-                subsets = [grouped.get_group(x) for x in data[attr].unique()]
+                subsets = [grouped.get_group(x) for x in data[attr].unique()] # one subset for each value
                 infoGain = self.calculateInformationGain(data, subsets)
 
-                if infoGain > bestGain:
+                if infoGain >= bestGain:
                     bestGain = infoGain
                     bestSubsets = subsets
                     splitAttrib = attr
-
-            else:
-                # Not Implemented
-                continue
-
-        return (splitAttrib, bestSubsets)
+                    bestSplitThreshold = None
+           
+            else: # if attr has numeric values
+                sortedData = data.sort_values(attr) # sort data by attr
+                for i in range(len(sortedData[attr]) - 1): # for each entry (without the last one)
+                    # if current and next value of attr are equal - do nothing
+                    if sortedData[attr].iloc[i] == sortedData[attr].iloc[i+1]:
+                        continue
+                    
+                    # calculate threshold and use it to create two subsets
+                    currentThreshold = (sortedData[attr].iloc[i] + sortedData[attr].iloc[i+1]) / 2
+                    lowerSubset = sortedData[sortedData[attr] <= currentThreshold]
+                    higherSubset = sortedData[sortedData[attr] > currentThreshold]
+                    infoGain = self.calculateInformationGain(sortedData, [lowerSubset, higherSubset])
+                    
+                    if infoGain >= bestGain:
+                        bestGain = infoGain
+                        bestSubsets = [lowerSubset, higherSubset]
+                        splitAttrib = attr
+                        bestSplitThreshold = currentThreshold
+                    
+        return (splitAttrib, bestSubsets, bestSplitThreshold)
 
 
 
