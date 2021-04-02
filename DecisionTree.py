@@ -23,7 +23,9 @@ class DecisionTreeGenerator:
             return (False, None)
 
     def getNumberOfRecordsInEachClass(self, data):
-        '''Returns a list of tuples (a,b) where: a - class name (value of the target variable), b - number of entries in dataframe, belonging to class a'''
+        '''Returns a list of tuples (a,b) where: 
+        a - class name (value of the target variable), 
+        b - number of entries in dataframe, belonging to class a'''
         return [ (x, np.count_nonzero(data.iloc[:,-1].to_numpy() == x)) for x in self.classes ] 
 
     def getClassWithMostRecords(self, data):
@@ -83,7 +85,9 @@ class DecisionTreeGenerator:
     #             self.data = self.data.astype({c:'category'})
 
     def splitData(self, data, availableAttributes):
-        '''Given a list of available attributes chooses a split that has the largest information gain. Returns the chosen attribute and the subsets of the dataframe resulting from the split'''
+        '''Given a list of available attributes chooses a split that has 
+        the largest information gain. Returns the chosen attribute and the 
+        subsets of the dataframe resulting from the split'''
         bestGain = -np.inf
         bestSubsets = None
         splitAttrib = None
@@ -124,39 +128,65 @@ class DecisionTreeGenerator:
         return (splitAttrib, bestSubsets, bestSplitThreshold)
 
     def generate(self):
+        '''Calls generateTree function for the dataframe assigned to the current instance of 
+        DecisionTreeGenerator, considering all input variables. 
+        Assigns the result to treeRoot data atribute of the instance.'''
         self.treeRoot = self.generateTree(self.data, self.inputVars)
 
     def generateTree(self, data, availableAttributes):
+        '''Recursively generates a decision tree for given dataframe and 
+        list of attributes. Returns an instance of class Node'''
 
         # Stopping criteria
         checkIfOnlyOneClass = self.checkIfOnlyOneClass(data)
         if checkIfOnlyOneClass[0] is True:
-            return Node(checkIfOnlyOneClass[1], None, True)
+            return Node(name=checkIfOnlyOneClass[1], threshold=None, isLeafNode=True, data=data)
         
         if len(availableAttributes) == 0:
             clasWithMostRecords = self.getClassWithMostRecords(data)
-            return Node(clasWithMostRecords, None, True)
+            return Node(name=clasWithMostRecords, threshold=None, isLeafNode=True, data=data)
 
         splitResult = self.splitData(data, availableAttributes)
         remainingAvailableAttribues = availableAttributes.copy()
         remainingAvailableAttribues.remove(splitResult[0])
 
-        decisionNode = Node(name=splitResult[0], threshold=splitResult[2], isLeafNode=False)
+        decisionNode = Node(name=splitResult[0], threshold=splitResult[2], isLeafNode=False, data=data)
+        # Recursive call for all subsets resulting from the split
         decisionNode.childNodes = [self.generateTree(subset, remainingAvailableAttribues) for subset in splitResult[1]]
+
         return decisionNode
-
-
-
-
-           
-
 
 
 class Node:
 
-    def __init__(self, name, threshold, isLeafNode):
+    def __init__(self, name, threshold, isLeafNode, data):
         self.name = name
         self.threshold = threshold
         self.isLeafNode = isLeafNode
+        self.data = data
         self.childNodes = []
+
+    def print(self, indentaion=''):
+        '''Traverses all child nodes and recursively prints info about them in a tree-like fashion'''
+
+        # if the node is a Leaf node printing is handled by the parent
+        if self.isLeafNode: 
+            return
+        
+        print(indentaion + '='*6 + ' ' + self.name + ' ' + '='*6)
+        
+        for index, childNode in enumerate(self.childNodes):       
+            if self.threshold is None:        
+                if childNode.isLeafNode:
+                    print(indentaion + self.name + " [" + childNode.data.loc[:, self.name].tolist()[0] + "]: " + childNode.name)
+                else:
+                    print(indentaion + self.name + " [" + childNode.data.loc[:, self.name].tolist()[0] + "]:")
+                    childNode.print(indentaion + '\t')
+            else:
+                if childNode.isLeafNode:
+                    print(indentaion + self.name + " [" + ['<= ', '> '][index] + str(self.threshold) + "]: " + childNode.name)
+                else:
+                    print(indentaion + self.name + " [" + ['<= ', '> '][index] + str(self.threshold) + "]:")
+                    childNode.print(indentaion + '\t')
+
 
