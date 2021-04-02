@@ -12,13 +12,13 @@ class DecisionTreeGenerator:
         # self.numOfInputVars = data.iloc[0,0:-1].count()
         self.classes = set(data.iloc[:,-1])
         # self.checkForCategoricalData()
-        self.tree = None
+        self.treeRoot = None
 
     def checkIfOnlyOneClass(self, data):
         '''Check if all entries in given dataframe belong to the same class, if true - return class name'''       
         distinctClasses = set(data.iloc[:,-1]) # set containing all classes of the target varible           
         if len(distinctClasses) == 1:
-            return (True, distinctClasses[0])
+            return (True, distinctClasses.pop())
         else:
             return (False, None)
 
@@ -115,13 +115,35 @@ class DecisionTreeGenerator:
                     higherSubset = sortedData[sortedData[attr] > currentThreshold]
                     infoGain = self.calculateInformationGain(sortedData, [lowerSubset, higherSubset])
                     
-                    if infoGain >= bestGain:
+                    if infoGain > bestGain:
                         bestGain = infoGain
                         bestSubsets = [lowerSubset, higherSubset]
                         splitAttrib = attr
                         bestSplitThreshold = currentThreshold
                     
         return (splitAttrib, bestSubsets, bestSplitThreshold)
+
+    def generate(self):
+        self.treeRoot = self.generateTree(self.data, self.inputVars)
+
+    def generateTree(self, data, availableAttributes):
+
+        # Stopping criteria
+        checkIfOnlyOneClass = self.checkIfOnlyOneClass(data)
+        if checkIfOnlyOneClass[0] is True:
+            return Node(checkIfOnlyOneClass[1], None, True)
+        
+        if len(availableAttributes) == 0:
+            clasWithMostRecords = self.getClassWithMostRecords(data)
+            return Node(clasWithMostRecords, None, True)
+
+        splitResult = self.splitData(data, availableAttributes)
+        remainingAvailableAttribues = availableAttributes.copy()
+        remainingAvailableAttribues.remove(splitResult[0])
+
+        decisionNode = Node(name=splitResult[0], threshold=splitResult[2], isLeafNode=False)
+        decisionNode.childNodes = [self.generateTree(subset, remainingAvailableAttribues) for subset in splitResult[1]]
+        return decisionNode
 
 
 
@@ -132,7 +154,9 @@ class DecisionTreeGenerator:
 
 class Node:
 
-	def __init__(self, name):
-		self.name = name
-		self.childNodes = []   
+    def __init__(self, name, threshold, isLeafNode):
+        self.name = name
+        self.threshold = threshold
+        self.isLeafNode = isLeafNode
+        self.childNodes = []
 
