@@ -10,13 +10,13 @@ class DecisionTreeGenerator:
         self.data = data
         self.inputVars = list(data)[:-1]
         # self.numOfInputVars = data.iloc[0,0:-1].count()
-        self.classes = set(data.iloc[:,-1])
+        self.classes = set(data.iloc[:, -1])
         # self.checkForCategoricalData()
         self.treeRoot = None
 
     def checkIfOnlyOneClass(self, data):
-        '''Check if all entries in given dataframe belong to the same class, if true - return class name'''       
-        distinctClasses = set(data.iloc[:,-1]) # set containing all classes of the target varible           
+        '''Check if all entries in given dataframe belong to the same class, if true - return class name'''
+        distinctClasses = set(data.iloc[:, -1])  # set containing all classes of the target varible
         if len(distinctClasses) == 1:
             return (True, distinctClasses.pop())
         else:
@@ -26,29 +26,30 @@ class DecisionTreeGenerator:
         '''Returns a list of tuples (a,b) where: 
         a - class name (value of the target variable), 
         b - number of entries in dataframe, belonging to class a'''
-        return [ (x, np.count_nonzero(data.iloc[:,-1].to_numpy() == x)) for x in self.classes ] 
+        return [(x, np.count_nonzero(data.iloc[:, -1].to_numpy() == x)) for x in self.classes]
 
     def getClassWithMostRecords(self, data):
         '''Returns the name of the class with most records in the dataframe'''
-        classes = set(data.iloc[:,-1])
+        classes = set(data.iloc[:, -1])
         numOfRecordsInEachClass = self.getNumberOfRecordsInEachClass(data)
         return max(numOfRecordsInEachClass, key=itemgetter(1))[0]
 
     def calculateEntopy(self, data):
-    
-        denominator = len(data) # number of entries in data
+
+        denominator = len(data)  # number of entries in data
         numOfRecordsInEachClass = self.getNumberOfRecordsInEachClass(data)
-        probabilities = [x[1]/denominator for x in numOfRecordsInEachClass] # (number of entries in class a) / (total number of entries)
-        entropy = -sum([x * (log2(x) if x>0 else 0) for x in probabilities]) # by convention log2(0) = 0
+        probabilities = [x[1] / denominator for x in
+                         numOfRecordsInEachClass]  # (number of entries in class a) / (total number of entries)
+        entropy = -sum([x * (log2(x) if x > 0 else 0) for x in probabilities])  # by convention log2(0) = 0
         return entropy
 
     def calculateInformationGain(self, data, dataSubsets):
         entropyBeforeSplit = self.calculateEntopy(data)
 
-        denominator = len(data) # number of entries in data
+        denominator = len(data)  # number of entries in data
         entropiesAfterSplit = [self.calculateEntopy(x) for x in dataSubsets]
-        subsetProportions = [len(x)/denominator for x in dataSubsets ]
-        weightedSumOfEntropies = sum([x*y for x,y in zip(entropiesAfterSplit, subsetProportions)])
+        subsetProportions = [len(x) / denominator for x in dataSubsets]
+        weightedSumOfEntropies = sum([x * y for x, y in zip(entropiesAfterSplit, subsetProportions)])
 
         informationGain = entropyBeforeSplit - weightedSumOfEntropies
         return informationGain
@@ -64,7 +65,7 @@ class DecisionTreeGenerator:
             raise ValueError("Number of subsets is not 2")
 
         totalNumOfRecords = len(data)
-        proportions = [len(x)/totalNumOfRecords for x in dataSubsets]
+        proportions = [len(x) / totalNumOfRecords for x in dataSubsets]
 
         numOfRecordsLeft = self.getNumberOfRecordsInEachClass(dataSubsets[0])
         numOfRecordsRight = self.getNumberOfRecordsInEachClass(dataSubsets[1])
@@ -74,7 +75,7 @@ class DecisionTreeGenerator:
             numOfClassRecordsLeft = self.getNumberOfRecordsInClass(dataSubsets[0], cl)[1]
             numOfClassRecordsRight = self.getNumberOfRecordsInClass(dataSubsets[1], cl)[1]
 
-            distances[i] = abs(numOfClassRecordsLeft/totalNumOfRecords - numOfClassRecordsRight/totalNumOfRecords)
+            distances[i] = abs(numOfClassRecordsLeft / totalNumOfRecords - numOfClassRecordsRight / totalNumOfRecords)
 
         return 2 * prod(proportions) * sum(distances)
 
@@ -97,7 +98,7 @@ class DecisionTreeGenerator:
             # if attr is discrete attribute with z values
             if str(data[attr].dtype) == 'object' or str(data[attr].dtype) == 'category':
                 grouped = data.groupby(attr)
-                subsets = [grouped.get_group(x) for x in data[attr].unique()] # one subset for each value
+                subsets = [grouped.get_group(x) for x in data[attr].unique()]  # one subset for each value
                 infoGain = self.calculateInformationGain(data, subsets)
 
                 if infoGain >= bestGain:
@@ -105,26 +106,26 @@ class DecisionTreeGenerator:
                     bestSubsets = subsets
                     splitAttrib = attr
                     bestSplitThreshold = None
-           
-            else: # if attr has numeric values
-                sortedData = data.sort_values(attr) # sort data by attr
-                for i in range(len(sortedData[attr]) - 1): # for each entry (without the last one)
+
+            else:  # if attr has numeric values
+                sortedData = data.sort_values(attr)  # sort data by attr
+                for i in range(len(sortedData[attr]) - 1):  # for each entry (without the last one)
                     # if current and next value of attr are equal - do nothing
-                    if sortedData[attr].iloc[i] == sortedData[attr].iloc[i+1]:
+                    if sortedData[attr].iloc[i] == sortedData[attr].iloc[i + 1]:
                         continue
-                    
+
                     # calculate threshold and use it to create two subsets
-                    currentThreshold = (sortedData[attr].iloc[i] + sortedData[attr].iloc[i+1]) / 2
+                    currentThreshold = (sortedData[attr].iloc[i] + sortedData[attr].iloc[i + 1]) / 2
                     lowerSubset = sortedData[sortedData[attr] <= currentThreshold]
                     higherSubset = sortedData[sortedData[attr] > currentThreshold]
                     infoGain = self.calculateInformationGain(sortedData, [lowerSubset, higherSubset])
-                    
+
                     if infoGain > bestGain:
                         bestGain = infoGain
                         bestSubsets = [lowerSubset, higherSubset]
                         splitAttrib = attr
                         bestSplitThreshold = currentThreshold
-                    
+
         return (splitAttrib, bestSubsets, bestSplitThreshold)
 
     def generate(self):
@@ -141,7 +142,7 @@ class DecisionTreeGenerator:
         checkIfOnlyOneClass = self.checkIfOnlyOneClass(data)
         if checkIfOnlyOneClass[0] is True:
             return Node(name=checkIfOnlyOneClass[1], threshold=None, isLeafNode=True, data=data)
-        
+
         if len(availableAttributes) == 0:
             clasWithMostRecords = self.getClassWithMostRecords(data)
             return Node(name=clasWithMostRecords, threshold=None, isLeafNode=True, data=data)
@@ -170,23 +171,23 @@ class Node:
         '''Traverses all child nodes and recursively prints info about them in a tree-like fashion'''
 
         # if the node is a Leaf node printing is handled by the parent
-        if self.isLeafNode: 
+        if self.isLeafNode:
             return
-        
-        print(indentaion + '='*6 + ' ' + self.name + ' ' + '='*6)
-        
-        for index, childNode in enumerate(self.childNodes):       
-            if self.threshold is None:        
+
+        print(indentaion + '=' * 6 + ' ' + self.name + ' ' + '=' * 6)
+
+        for index, childNode in enumerate(self.childNodes):
+            if self.threshold is None:
                 if childNode.isLeafNode:
-                    print(indentaion + self.name + " [" + childNode.data.loc[:, self.name].tolist()[0] + "]: " + childNode.name)
+                    print(indentaion + self.name + " [" + childNode.data.loc[:, self.name].tolist()[
+                        0] + "]: " + childNode.name)
                 else:
                     print(indentaion + self.name + " [" + childNode.data.loc[:, self.name].tolist()[0] + "]:")
                     childNode.print(indentaion + '\t')
             else:
                 if childNode.isLeafNode:
-                    print(indentaion + self.name + " [" + ['<= ', '> '][index] + str(self.threshold) + "]: " + childNode.name)
+                    print(indentaion + self.name + " [" + ['<= ', '> '][index] + str(
+                        self.threshold) + "]: " + childNode.name)
                 else:
                     print(indentaion + self.name + " [" + ['<= ', '> '][index] + str(self.threshold) + "]:")
                     childNode.print(indentaion + '\t')
-
-
