@@ -5,14 +5,20 @@ import DataPreparation as dp
 
 data1 = pd.read_csv("data/iris.csv")
 dtg1 = dt.DecisionTreeGenerator(data1)
-dtg1.generate()
+#dtg1.generate()
 #dtg1.treeRoot.print()
 
 print()
 
 data2 = pd.read_csv("data/creditRisk.csv")
-dpp = dp.DataPrep(data2, list(data2)[:-1])
 dtg2 = dt.DecisionTreeGenerator(data2)
-dtg2.generate()
-#dtg2.treeRoot.print()
+print(data2)
 
+print()
+
+data3 = pd.read_csv("data/flavors_of_cacao.csv")
+data3.columns = ['company','bar_name','ref','review_year','cocoa_percent',
+                'company_location','rating','bean_type','broad_bean_origin']
+dpp = dp.DataPrep(data3, list(data3)[:-1])
+data3 = dpp.mergeCategoricalOutliers('company_location', 1)
+print(data3.company_location.value_counts())
