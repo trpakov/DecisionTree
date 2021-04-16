@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+import pandas as pd
 
 
 class DataPrep:
@@ -32,6 +33,15 @@ class DataPrep:
                 self.data[attr].value_counts().plot.bar()
                 plt.show()
                 print()
+
+    def mergeCategoricalOutliers(self, attrName, thresholdPercent):
+        series = pd.value_counts(self.data[attrName])
+        mask = (series / series.sum() * 100).lt(thresholdPercent)
+        self.data = self.data.assign(new_column=np.where(self.data[attrName].isin(series[mask].index), 'Other',
+                                                         self.data[attrName]))
+        self.data[attrName] = self.data['new_column']
+        self.data = self.data.drop('new_column', axis=1)
+        return self.data
 
     def createMissingDataHeapMap(self):
         '''For smaller number of features'''

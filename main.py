@@ -45,3 +45,11 @@ dtg3.treeRoot.print(file=f)
 # print(bt)
 
 
+print()
+
+data3 = pd.read_csv("data/flavors_of_cacao.csv")
+data3.columns = ['company','bar_name','ref','review_year','cocoa_percent',
+                'company_location','rating','bean_type','broad_bean_origin']
+dpp = dp.DataPrep(data3, list(data3)[:-1])
+data3 = dpp.mergeCategoricalOutliers('company_location', 1)
+print(data3.company_location.value_counts())
