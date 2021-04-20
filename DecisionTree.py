@@ -15,6 +15,8 @@ class DecisionTreeGenerator:
         self.classes = set(data.iloc[:, -1])
         # self.checkForCategoricalData()
         self.treeRoot = None
+        self.numOfLeafNodes = 0 # number of terminal nodes
+        self.twigs = {} # dict with nodes that have only leaf nodes (keys) and their info gain (values)
 
     def checkIfOnlyOneClass(self, data):
         '''Check if all entries in given dataframe belong to the same class, if true - return class name'''
@@ -180,33 +182,37 @@ class DecisionTreeGenerator:
                             bestSubsets = [lowerSubset, higherSubset]
                             splitAttrib = attr
                             bestSplitThreshold = currentThreshold
-                    
-        return (splitAttrib, bestSubsets, bestSplitThreshold, bestRanges)
 
-    def generate(self, numericAttrBinning=True):
+        return (splitAttrib, bestSubsets, bestSplitThreshold, bestRanges, bestGain)
+
+    def generate(self, numericAttrBinning=True, maxNumRecordsToSkipSplitting=30):
         '''Calls generateTree function for the dataframe assigned to the current instance of 
         DecisionTreeGenerator, considering all input variables. 
         Assigns the result to treeRoot data atribute of the instance.'''
-        self.treeRoot = self.generateTree(self.data, self.inputVars, numericAttrBinning)
+        self.treeRoot = self.generateTree(self.data, self.inputVars, numericAttrBinning, maxNumRecordsToSkipSplitting=maxNumRecordsToSkipSplitting)
 
-    def generateTree(self, data, availableAttributes, numericAttrBinning, dataRange=None ):
+    def generateTree(self, data, availableAttributes, numericAttrBinning, dataRange=None, maxNumRecordsToSkipSplitting=30):
         '''Recursively generates a decision tree for given dataframe and 
         list of attributes. Returns an instance of class Node'''
         # Stopping criteria
         checkIfOnlyOneClass = self.checkIfOnlyOneClass(data)
         if checkIfOnlyOneClass[0] is True:
+            self.numOfLeafNodes += 1
             return Node(name=checkIfOnlyOneClass[1], threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
 
         if len(availableAttributes) == 0:
+            self.numOfLeafNodes += 1
             clasWithMostRecords = self.getClassWithMostRecords(data)
             return Node(name=clasWithMostRecords, threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
 
-        if len(data) < 1:
+        if len(data) <= maxNumRecordsToSkipSplitting:
+            self.numOfLeafNodes += 1
             clasWithMostRecords = self.getClassWithMostRecords(data)
             return Node(name=clasWithMostRecords, threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
 
         # if more than 90% of the records in data belong to the same class
         if (Counter(data.iloc[:, -1].values).most_common(1)[0][1] / len(data)) * 100 > 90:
+            self.numOfLeafNodes += 1
             clasWithMostRecords = self.getClassWithMostRecords(data)
             return Node(name=clasWithMostRecords, threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
 
@@ -219,26 +225,62 @@ class DecisionTreeGenerator:
         #if splitResult[2] is None: # If attr is categorical, remove it from available attributes
         remainingAvailableAttribues.remove(splitResult[0])
 
-        decisionNode = Node(name=splitResult[0], threshold=splitResult[2], isLeafNode=False, data=data, dataRange=dataRange)
+        decisionNode = Node(name=splitResult[0], threshold=splitResult[2], isLeafNode=False, data=data, dataRange=dataRange, gain=splitResult[4])
         # Recursive call for all subsets resulting from the split
         if splitResult[3] is None:          
-            decisionNode.childNodes = [self.generateTree(subset, remainingAvailableAttribues, numericAttrBinning) for subset in splitResult[1]]
+            decisionNode.childNodes = [self.generateTree(subset, remainingAvailableAttribues, numericAttrBinning, maxNumRecordsToSkipSplitting=maxNumRecordsToSkipSplitting) for subset in splitResult[1]]
         else: # if the split was done with binning, send the range to the next recursive call
-            decisionNode.childNodes = [self.generateTree(subset, remainingAvailableAttribues, numericAttrBinning, dataRange=dataRng) for (subset, dataRng) in zip(splitResult[1], splitResult[3])]
+            decisionNode.childNodes = [self.generateTree(subset, remainingAvailableAttribues, numericAttrBinning, dataRange=dataRng, maxNumRecordsToSkipSplitting=maxNumRecordsToSkipSplitting) for (subset, dataRng) in zip(splitResult[1], splitResult[3])]
 
         # Remove child node elements of type None, generated if split was not possible
         decisionNode.childNodes = [node for node in decisionNode.childNodes if node is not None]
         return decisionNode
 
+    def generateTwigsDict(self, node=None):
+        ''' Fill in the dict containing all current twigs (nodes whose children are all leaf nodes)'''
+        if node is None: # if node is not specified, start from root and clear current dict
+            node = self.treeRoot
+            self.twigs.clear()
+
+        if node.isLeafNode: # recursion stoppping criterium
+            return
+
+        # if all children are leaf nodes, add current node and its gain to dict
+        if all(childNode.isLeafNode for childNode in node.childNodes):
+            self.twigs[node] = node.gain
+
+        # recursive call for all children of current node
+        for node in node.childNodes:
+            self.generateTwigsDict(node)
+
+    def prune(self, maxNumOfLeafNodes):  
+        '''Prunes out portions of the tree that result in the least information gain.
+        Continues while number of leaf nodes is more than desired.'''
+        
+        while self.numOfLeafNodes > maxNumOfLeafNodes:
+            self.generateTwigsDict() # fill in twigs dict
+            # get twig node with lowest gain
+            nodeWithLowestGain = min(self.twigs, key=self.twigs.get)
+            # change type to leaf
+            nodeWithLowestGain.isLeafNode = True
+            # update total num of leaf nodes
+            self.numOfLeafNodes -= (len(nodeWithLowestGain.childNodes) - 1)
+            nodeWithLowestGain.gain = None
+            nodeWithLowestGain.childNodes = [] # no more child nodes
+            # change node name to class with most records
+            nodeWithLowestGain.name = self.getClassWithMostRecords(nodeWithLowestGain.data)
+            #print('num of leaf nodes: ' + str(self.numOfLeafNodes))
+
 
 class Node:
 
-    def __init__(self, name, threshold, isLeafNode, data, dataRange=None):
+    def __init__(self, name, threshold, isLeafNode, data, dataRange=None, gain=None):
         self.name = name
         self.threshold = threshold
         self.isLeafNode = isLeafNode
         self.data = data
         self.dataRange = dataRange
+        self.gain = gain
         self.childNodes = []
 
     def print(self, indentaion='', file=None):

@@ -5,8 +5,8 @@ import DataPreparation as dp
 
 data1 = pd.read_csv("data/iris.csv")
 dtg1 = dt.DecisionTreeGenerator(data1)
-dtg1.generate()
-dtg1.treeRoot.print()
+# dtg1.generate()
+# dtg1.treeRoot.print()
 
 print()
 
@@ -19,15 +19,17 @@ dtg2 = dt.DecisionTreeGenerator(data2)
 data3 = pd.read_csv("data/titanic2.csv")
 data3 = data3.astype({'Pclass':'category', 'Siblings/Spouses Aboard':'category', 'Parents/Children Aboard':'category'}, copy=False)
 dtg3 = dt.DecisionTreeGenerator(data3)
-dtg3.generate()
-f = open('data/tree.txt', mode='w', encoding='utf-8')
+dtg3.generate(maxNumRecordsToSkipSplitting=1)
+dtg3.prune(10)
+f = open('data/titanicPruned.txt', mode='w', encoding='utf-8')
 dtg3.treeRoot.print(file=f)
 
 # x = data3["Age"].values
 # y = data3["Survived"].values
-# optb = MulticlassOptimalBinning(min_n_bins=2, max_n_bins=5)
+# optb = MulticlassOptimalBinning(min_n_bins=2, max_n_bins=4)
 # optb.fit(x, y)
 # bt = optb.binning_table.build()
+# print(bt)
 # btRanges = bt['Bin'].head(-3)
 # btRanges.iloc[0] = btRanges.iloc[0].replace('-inf', "'-inf'")
 # btRanges.iloc[-1] = btRanges.iloc[-1].replace('inf', "'inf'")
@@ -45,11 +47,9 @@ dtg3.treeRoot.print(file=f)
 # print(bt)
 
 
-print()
-
-data3 = pd.read_csv("data/flavors_of_cacao.csv")
-data3.columns = ['company','bar_name','ref','review_year','cocoa_percent',
-                'company_location','rating','bean_type','broad_bean_origin']
-dpp = dp.DataPrep(data3, list(data3)[:-1])
-data3 = dpp.mergeCategoricalOutliers('company_location', 1)
-print(data3.company_location.value_counts())
+# data3 = pd.read_csv("data/flavors_of_cacao.csv")
+# data3.columns = ['company','bar_name','ref','review_year','cocoa_percent',
+#                 'company_location','rating','bean_type','broad_bean_origin']
+# dpp = dp.DataPrep(data3, list(data3)[:-1])
+# data3 = dpp.mergeCategoricalOutliers('company_location', 1)
+# print(data3.company_location.value_counts())
