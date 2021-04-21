@@ -1,0 +1,9 @@
+Savings,Assets,Income($1000s),Credit_Risk
+Medium,High,75,
+Low,Low,50,
+High,Medium,25,
+Medium,Medium,50,
+Low,Medium,100,
+High,High,25,
+Low,Low,25,
+Medium,Medium,75,
