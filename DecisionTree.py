@@ -220,7 +220,10 @@ class DecisionTreeGenerator:
         remainingAvailableAttribues = availableAttributes.copy()
 
         # if no suitable attribute to split on
-        if splitResult[0] is None: return
+        if splitResult[0] is None: 
+            self.numOfLeafNodes += 1
+            clasWithMostRecords = self.getClassWithMostRecords(data)
+            return Node(name=clasWithMostRecords, threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
 
         #if splitResult[2] is None: # If attr is categorical, remove it from available attributes
         remainingAvailableAttribues.remove(splitResult[0])
@@ -232,8 +235,9 @@ class DecisionTreeGenerator:
         else: # if the split was done with binning, send the range to the next recursive call
             decisionNode.childNodes = [self.generateTree(subset, remainingAvailableAttribues, numericAttrBinning, dataRange=dataRng, maxNumRecordsToSkipSplitting=maxNumRecordsToSkipSplitting) for (subset, dataRng) in zip(splitResult[1], splitResult[3])]
 
-        # Remove child node elements of type None, generated if split was not possible
-        decisionNode.childNodes = [node for node in decisionNode.childNodes if node is not None]
+        # # Remove child node elements of type None, generated if split was not possible
+        # decisionNode.childNodes = [node for node in decisionNode.childNodes if node is not None]
+
         return decisionNode
 
     def generateTwigsDict(self, node=None):

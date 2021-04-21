@@ -1,18 +1,16 @@
 ========== Sex ==========
 Sex ['male'] [size = 573]:
 	========== Age ==========
-	Age ∈ (-inf, 13.0) [size = 41]: 1
-	Age ∈ (13.0, 20.25) [size = 89]:
-		========== Fare ==========
-		Fare ∈ (-inf, 7.76) [size = 25]: 0
-		Fare ∈ (7.76, 8.1) [size = 22]:
-			========== Siblings/Spouses Aboard ==========
-			Siblings/Spouses Aboard [1] [size = 2]:
-				========== Parents/Children Aboard ==========
-				Parents/Children Aboard [1] [size = 1]: 0
-				Parents/Children Aboard [0] [size = 1]: 1
-		Fare ∈ (8.1, 16.87) [size = 23]: 0
-		Fare ∈ (16.87, inf) [size = 19]: 0
+	Age ∈ (-inf, 13.0) [size = 41]:
+		========== Siblings/Spouses Aboard ==========
+		Siblings/Spouses Aboard [3, 5, 8, 4] [size = 17]: 0
+		Siblings/Spouses Aboard [0] [size = 7]: 1
+		Siblings/Spouses Aboard [1, 2] [size = 17]: 1
+	Age ∈ (13.0, 20.25) [size = 89]: 0
 	Age ∈ (20.25, 22.5) [size = 46]: 0
 	Age ∈ (22.5, inf) [size = 397]: 0
-Sex ['female'] [size = 314]: 1
+Sex ['female'] [size = 314]:
+	========== Pclass ==========
+	Pclass ['3'] [size = 143]: 0
+	Pclass ['2'] [size = 76]: 1
+	Pclass ['1', 'asd'] [size = 95]: 1
