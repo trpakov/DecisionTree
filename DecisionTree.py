@@ -287,33 +287,33 @@ class Node:
         self.gain = gain
         self.childNodes = []
 
-    def print(self, indentaion='', file=None):
+    def print(self, indentation='', numOfTabsBetweenLevels=1, file=None):
         '''Traverses all child nodes and recursively prints info about them in a tree-like fashion'''
 
         # if the node is a Leaf node printing is handled by the parent
         if self.isLeafNode:
             return
 
-        print(indentaion + '=' * 10 + ' ' + self.name + ' ' + '=' * 10, file=file)
+        print(indentation + '=' * 10 + ' ' + self.name + ' ' + '=' * 10, file=file)
 
         for index, childNode in enumerate(self.childNodes):
             if self.threshold is None:
                 if childNode.dataRange is None:
                     if childNode.isLeafNode:
-                        print(indentaion + str(self.name) + ' ' + str(childNode.data.loc[:, self.name].unique().tolist()) + ' [size = ' + str(len(childNode.data)) + ']' + ": " + str(childNode.name), file=file)
+                        print(indentation + str(self.name) + ' ' + str(childNode.data.loc[:, self.name].unique().tolist()) + ' [size = ' + str(len(childNode.data)) + ']' + ": " + str(childNode.name), file=file)
                     else:
-                        print(indentaion + str(self.name) + ' ' + str(childNode.data.loc[:, self.name].unique().tolist()) + ' [size = ' + str(len(childNode.data)) + ']' + ":", file=file)
-                        childNode.print(indentaion + '\t', file=file)
+                        print(indentation + str(self.name) + ' ' + str(childNode.data.loc[:, self.name].unique().tolist()) + ' [size = ' + str(len(childNode.data)) + ']' + ":", file=file)
+                        childNode.print(indentation + '\t' * numOfTabsBetweenLevels, numOfTabsBetweenLevels, file=file)
                 else:
                     if childNode.isLeafNode:
-                        print(indentaion + str(self.name) + ' \u2208 ' + str(childNode.dataRange) + ' [size = ' + str(len(childNode.data)) + ']' + ": " + str(childNode.name), file=file)
+                        print(indentation + str(self.name) + ' \u2208 ' + str(childNode.dataRange) + ' [size = ' + str(len(childNode.data)) + ']' + ": " + str(childNode.name), file=file)
                     else:
-                        print(indentaion + str(self.name) + ' \u2208 ' + str(childNode.dataRange) + ' [size = ' + str(len(childNode.data)) + ']' + ":", file=file)
-                        childNode.print(indentaion + '\t', file=file)
+                        print(indentation + str(self.name) + ' \u2208 ' + str(childNode.dataRange) + ' [size = ' + str(len(childNode.data)) + ']' + ":", file=file)
+                        childNode.print(indentation + '\t' * numOfTabsBetweenLevels, numOfTabsBetweenLevels, file=file)
             else:
                 if childNode.isLeafNode:
-                    print(indentaion + str(self.name) + " [" + ['<= ', '> '][index] + str(
+                    print(indentation + str(self.name) + " [" + ['<= ', '> '][index] + str(
                         self.threshold) + "]" + ' [size = ' + str(len(childNode.data)) + ']' + ": " + str(childNode.name), file=file)
                 else:
-                    print(indentaion + str(self.name) + " [" + ['<= ', '> '][index] + str(self.threshold) + "]" + ' [size = ' + str(len(childNode.data)) + ']' + ":", file=file)
-                    childNode.print(indentaion + '\t', file=file)
+                    print(indentation + str(self.name) + " [" + ['<= ', '> '][index] + str(self.threshold) + "]" + ' [size = ' + str(len(childNode.data)) + ']' + ":", file=file)
+                    childNode.print(indentation + '\t' * numOfTabsBetweenLevels, numOfTabsBetweenLevels, file=file)
