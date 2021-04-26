@@ -43,12 +43,12 @@ class DecisionMaker:
                 break
 
             if isCategorical:
+                print(node.childNodes[branches_names.index(row[1][node.name])].name)
                 #Checking if row value branching is leaf
                 if node.childNodes[branches_names.index(row[1][node.name])].isLeafNode:
 
                     #If it is leaf we are adding the value of the leaf to the last column on the row
-                    row[1][-1] = node.childNodes[branches_names.index(row[1][node.name])].name
-                    new_dataSet.at[self.counter, 'Credit_Risk'] = node.childNodes[branches_names.index(row[1][node.name])].name
+                    new_dataSet.at[self.counter, 'Survived'] = node.childNodes[branches_names.index(row[1][node.name])].name
                     self.counter += 1
                     self.DecisionMaking(self.treeRoot)
                     return
@@ -66,11 +66,10 @@ class DecisionMaker:
                     branch_name = branch_name.replace(node.name, str(row[1][node.name]))
 
                     print(branch_name)
-                    if eval(branch_name):
+                    if eval(branch_name.replace('inf', '5000000')):
 
                         print("in")
                         if node.childNodes[self.counter2].isLeafNode:
-                            row[1][-1] = node.childNodes[self.counter2].name
                             new_dataSet.at[self.counter, 'species'] = node.childNodes[self.counter2].name
                             self.counter += 1
                             self.DecisionMaking(self.treeRoot)
