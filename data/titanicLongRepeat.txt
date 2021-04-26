@@ -1,0 +1,421 @@
+========== Sex ==========
+Sex ['male'] [size = 573]:
+	========== Age ==========
+	Age ∈ (-inf, 13.0) [size = 41]:
+		========== Siblings/Spouses Aboard ==========
+		Siblings/Spouses Aboard [3, 5, 8, 4] [size = 17]: 0
+		Siblings/Spouses Aboard [0] [size = 7]:
+			========== Parents/Children Aboard ==========
+			Parents/Children Aboard [2] [size = 4]: 1
+			Parents/Children Aboard [0] [size = 1]: 0
+			Parents/Children Aboard [1] [size = 2]: 1
+		Siblings/Spouses Aboard [1, 2] [size = 17]: 1
+	Age ∈ (13.0, 20.25) [size = 89]:
+		========== Fare ==========
+		Fare ∈ (-inf, 7.76) [size = 25]:
+			========== Siblings/Spouses Aboard ==========
+			Siblings/Spouses Aboard [0] [size = 21]:
+				========== Pclass ==========
+				Pclass [3] [size = 20]:
+					========== Fare ==========
+					Fare ∈ (-inf, 7.24) [size = 10]:
+						========== Fare ==========
+						Fare [<= 7.2271] [size = 6]: 0
+						Fare [> 7.2271] [size = 4]:
+							========== Age ==========
+							Age [<= 17.5] [size = 1]: 0
+							Age [> 17.5] [size = 3]:
+								========== Age ==========
+								Age [<= 19.0] [size = 2]: 0
+								Age [> 19.0] [size = 1]: 1
+					Fare ∈ (7.24, 7.76) [size = 10]:
+						========== Age ==========
+						Age [<= 18.5] [size = 4]: 0
+						Age [> 18.5] [size = 6]:
+							========== Age ==========
+							Age [<= 19.5] [size = 4]:
+								========== Fare ==========
+								Fare [<= 7.739599999999999] [size = 2]: 0
+								Fare [> 7.739599999999999] [size = 2]: 0
+							Age [> 19.5] [size = 2]: 0
+				Pclass [2] [size = 1]: 0
+			Siblings/Spouses Aboard [1] [size = 4]: 0
+		Fare ∈ (7.76, 8.1) [size = 22]:
+			========== Fare ==========
+			Fare ∈ (7.76, 7.99) [size = 13]: 0
+			Fare ∈ (7.99, 8.1) [size = 9]:
+				========== Age ==========
+				Age ∈ (13.0, 17.0) [size = 2]: 0
+				Age ∈ (17.0, 20.25) [size = 7]:
+					========== Age ==========
+					Age [<= 18.5] [size = 1]: 1
+					Age [> 18.5] [size = 6]:
+						========== Age ==========
+						Age [<= 19.5] [size = 3]: 0
+						Age [> 19.5] [size = 3]: 0
+		Fare ∈ (8.1, 16.87) [size = 23]: 0
+		Fare ∈ (16.87, inf) [size = 19]: 0
+	Age ∈ (20.25, 22.5) [size = 46]: 0
+	Age ∈ (22.5, inf) [size = 397]:
+		========== Fare ==========
+		Fare ∈ (-inf, 13.93) [size = 217]:
+			========== Age ==========
+			Age ∈ (22.5, 32.5) [size = 123]:
+				========== Age ==========
+				Age ∈ (22.5, 29.5) [size = 90]:
+					========== Fare ==========
+					Fare ∈ (-inf, 7.18) [size = 8]:
+						========== Fare ==========
+						Fare [<= 3.42915] [size = 1]: 1
+						Fare [> 3.42915] [size = 7]:
+							========== Fare ==========
+							Fare [<= 7.09585] [size = 6]:
+								========== Fare ==========
+								Fare [<= 7.0104] [size = 2]:
+									========== Fare ==========
+									Fare [<= 6.91665] [size = 1]: 0
+									Fare [> 6.91665] [size = 1]: 1
+								Fare [> 7.0104] [size = 4]: 0
+							Fare [> 7.09585] [size = 1]: 1
+					Fare ∈ (7.18, 7.83) [size = 23]:
+						========== Fare ==========
+						Fare ∈ (7.18, 7.76) [size = 15]: 0
+						Fare ∈ (7.76, 7.79) [size = 5]:
+							========== Siblings/Spouses Aboard ==========
+							Siblings/Spouses Aboard [0] [size = 3]:
+								========== Age ==========
+								Age [<= 27.5] [size = 1]: 0
+								Age [> 27.5] [size = 2]: 0
+							Siblings/Spouses Aboard [1] [size = 2]: 0
+						Fare ∈ (7.79, 7.83) [size = 3]:
+							========== Age ==========
+							Age [<= 25.5] [size = 1]: 0
+							Age [> 25.5] [size = 2]:
+								========== Age ==========
+								Age [<= 27.5] [size = 1]: 1
+								Age [> 27.5] [size = 1]: 0
+					Fare ∈ (7.83, 7.91) [size = 21]: 0
+					Fare ∈ (7.91, 13.93) [size = 38]:
+						========== Fare ==========
+						Fare ∈ (7.91, 8.56) [size = 10]:
+							========== Age ==========
+							Age [<= 28.5] [size = 8]: 0
+							Age [> 28.5] [size = 2]:
+								========== Fare ==========
+								Fare [<= 8.08125] [size = 1]: 0
+								Fare [> 8.08125] [size = 1]: 1
+						Fare ∈ (8.56, 8.94) [size = 2]:
+							========== Siblings/Spouses Aboard ==========
+							Siblings/Spouses Aboard [2] [size = 1]: 0
+							Siblings/Spouses Aboard [0] [size = 1]: 1
+						Fare ∈ (8.94, 10.0) [size = 7]:
+							========== Age ==========
+							Age [<= 28.5] [size = 5]: 0
+							Age [> 28.5] [size = 2]:
+								========== Fare ==========
+								Fare [<= 9.49165] [size = 1]: 0
+								Fare [> 9.49165] [size = 1]: 1
+						Fare ∈ (10.0, 13.93) [size = 19]:
+							========== Fare ==========
+							Fare ∈ (10.0, 13.25) [size = 17]: 0
+							Fare ∈ (13.25, 13.93) [size = 2]:
+								========== Age ==========
+								Age [<= 27.5] [size = 1]: 1
+								Age [> 27.5] [size = 1]: 0
+				Age ∈ (29.5, 30.75) [size = 18]: 0
+				Age ∈ (30.75, 32.5) [size = 15]:
+					========== Fare ==========
+					Fare ∈ (-inf, 7.99) [size = 10]:
+						========== Fare ==========
+						Fare [<= 7.8146] [size = 3]: 0
+						Fare [> 7.8146] [size = 7]:
+							========== Age ==========
+							Age [<= 31.5] [size = 1]: 1
+							Age [> 31.5] [size = 6]:
+								========== Fare ==========
+								Fare [<= 7.875] [size = 1]: 1
+								Fare [> 7.875] [size = 5]:
+									========== Fare ==========
+									Fare [<= 7.9104] [size = 2]: 0
+									Fare [> 7.9104] [size = 3]: 0
+					Fare ∈ (7.99, 13.93) [size = 5]:
+						========== Fare ==========
+						Fare [<= 8.20625] [size = 1]: 1
+						Fare [> 8.20625] [size = 4]:
+							========== Fare ==========
+							Fare [<= 11.75] [size = 3]: 0
+							Fare [> 11.75] [size = 1]: 1
+			Age ∈ (32.5, 45.25) [size = 66]: 0
+			Age ∈ (45.25, inf) [size = 28]: 0
+		Fare ∈ (13.93, 26.27) [size = 58]: 0
+		Fare ∈ (26.27, 52.28) [size = 72]:
+			========== Fare ==========
+			Fare ∈ (26.27, 29.85) [size = 30]:
+				========== Fare ==========
+				Fare ∈ (26.27, 26.77) [size = 18]:
+					========== Age ==========
+					Age ∈ (22.5, 46.5) [size = 11]:
+						========== Age ==========
+						Age [<= 39.0] [size = 7]: 1
+						Age [> 39.0] [size = 4]:
+							========== Age ==========
+							Age [<= 41.5] [size = 1]: 0
+							Age [> 41.5] [size = 3]:
+								========== Age ==========
+								Age [<= 43.5] [size = 1]: 1
+								Age [> 43.5] [size = 2]: 0
+					Age ∈ (46.5, inf) [size = 7]:
+						========== Age ==========
+						Age [<= 53.5] [size = 2]: 1
+						Age [> 53.5] [size = 5]: 0
+				Fare ∈ (26.77, 29.85) [size = 12]: 0
+			Fare ∈ (29.85, 30.6) [size = 10]:
+				========== Siblings/Spouses Aboard ==========
+				Siblings/Spouses Aboard [1] [size = 1]: 0
+				Siblings/Spouses Aboard [0] [size = 9]:
+					========== Age ==========
+					Age [<= 28.0] [size = 2]: 1
+					Age [> 28.0] [size = 7]:
+						========== Age ==========
+						Age [<= 30.5] [size = 1]: 0
+						Age [> 30.5] [size = 6]:
+							========== Age ==========
+							Age [<= 53.5] [size = 4]: 1
+							Age [> 53.5] [size = 2]:
+								========== Age ==========
+								Age [<= 67.5] [size = 1]: 0
+								Age [> 67.5] [size = 1]: 1
+			Fare ∈ (30.6, 36.25) [size = 15]:
+				========== Parents/Children Aboard ==========
+				Parents/Children Aboard [5] [size = 1]: 0
+				Parents/Children Aboard [0] [size = 13]:
+					========== Age ==========
+					Age ∈ (22.5, 34.0) [size = 2]:
+						========== Fare ==========
+						Fare [<= 33.25] [size = 1]: 0
+						Fare [> 33.25] [size = 1]: 1
+					Age ∈ (34.0, inf) [size = 11]:
+						========== Fare ==========
+						Fare [<= 35.25] [size = 8]:
+							========== Age ==========
+							Age [<= 41.5] [size = 1]: 1
+							Age [> 41.5] [size = 7]: 0
+						Fare [> 35.25] [size = 3]:
+							========== Age ==========
+							Age [<= 45.5] [size = 1]: 0
+							Age [> 45.5] [size = 2]: 1
+				Parents/Children Aboard [1] [size = 1]: 0
+			Fare ∈ (36.25, 52.28) [size = 17]: 0
+		Fare ∈ (52.28, inf) [size = 50]:
+			========== Fare ==========
+			Fare ∈ (52.28, 59.09) [size = 15]:
+				========== Parents/Children Aboard ==========
+				Parents/Children Aboard [0] [size = 14]:
+					========== Fare ==========
+					Fare ∈ (52.28, 54.27) [size = 3]:
+						========== Age ==========
+						Age [<= 32.0] [size = 1]: 1
+						Age [> 32.0] [size = 2]:
+							========== Age ==========
+							Age [<= 39.5] [size = 1]: 0
+							Age [> 39.5] [size = 1]: 1
+					Fare ∈ (54.27, 59.09) [size = 11]:
+						========== Age ==========
+						Age [<= 24.0] [size = 1]: 0
+						Age [> 24.0] [size = 10]:
+							========== Age ==========
+							Age [<= 49.5] [size = 9]:
+								========== Age ==========
+								Age [<= 29.5] [size = 3]:
+									========== Age ==========
+									Age [<= 27.0] [size = 2]: 1
+									Age [> 27.0] [size = 1]: 0
+								Age [> 29.5] [size = 6]: 1
+							Age [> 49.5] [size = 1]: 0
+				Parents/Children Aboard [1] [size = 1]: 1
+			Fare ∈ (59.09, 143.56) [size = 27]:
+				========== Age ==========
+				Age ∈ (22.5, 24.5) [size = 3]:
+					========== Parents/Children Aboard ==========
+					Parents/Children Aboard [1] [size = 1]: 1
+					Parents/Children Aboard [0] [size = 2]: 0
+				Age ∈ (24.5, 41.0) [size = 8]:
+					========== Fare ==========
+					Fare [<= 86.08539999999999] [size = 5]:
+						========== Siblings/Spouses Aboard ==========
+						Siblings/Spouses Aboard [1] [size = 3]: 0
+						Siblings/Spouses Aboard [2] [size = 1]: 0
+						Siblings/Spouses Aboard [0] [size = 1]: 1
+					Fare [> 86.08539999999999] [size = 3]: 1
+				Age ∈ (41.0, 50.5) [size = 9]:
+					========== Fare ==========
+					Fare [<= 122.26665] [size = 8]:
+						========== Age ==========
+						Age [<= 47.0] [size = 4]: 0
+						Age [> 47.0] [size = 4]:
+							========== Fare ==========
+							Fare [<= 97.7646] [size = 2]: 1
+							Fare [> 97.7646] [size = 2]: 0
+					Fare [> 122.26665] [size = 1]: 1
+				Age ∈ (50.5, inf) [size = 7]:
+					========== Siblings/Spouses Aboard ==========
+					Siblings/Spouses Aboard [0] [size = 4]: 0
+					Siblings/Spouses Aboard [1] [size = 3]:
+						========== Age ==========
+						Age [<= 56.0] [size = 1]: 0
+						Age [> 56.0] [size = 2]:
+							========== Age ==========
+							Age [<= 65.0] [size = 1]: 1
+							Age [> 65.0] [size = 1]: 0
+			Fare ∈ (143.56, inf) [size = 8]:
+				========== Fare ==========
+				Fare [<= 387.6646] [size = 6]: 0
+				Fare [> 387.6646] [size = 2]: 1
+Sex ['female'] [size = 314]:
+	========== Pclass ==========
+	Pclass [3] [size = 143]:
+		========== Fare ==========
+		Fare ∈ (-inf, 7.74) [size = 14]:
+			========== Fare ==========
+			Fare ∈ (-inf, 7.59) [size = 9]:
+				========== Fare ==========
+				Fare [<= 6.9875] [size = 1]: 0
+				Fare [> 6.9875] [size = 8]:
+					========== Fare ==========
+					Fare [<= 7.5229] [size = 6]: 1
+					Fare [> 7.5229] [size = 2]:
+						========== Age ==========
+						Age [<= 22.0] [size = 1]: 0
+						Age [> 22.0] [size = 1]: 1
+			Fare ∈ (7.59, 7.74) [size = 5]:
+				========== Fare ==========
+				Fare [<= 7.6396] [size = 1]: 0
+				Fare [> 7.6396] [size = 4]: 1
+		Fare ∈ (7.74, 7.89) [size = 28]:
+			========== Age ==========
+			Age ∈ (-inf, 18.5) [size = 5]:
+				========== Fare ==========
+				Fare [<= 7.7625] [size = 2]: 1
+				Fare [> 7.7625] [size = 3]:
+					========== Age ==========
+					Age [<= 15.0] [size = 1]: 0
+					Age [> 15.0] [size = 2]:
+						========== Age ==========
+						Age [<= 17.0] [size = 1]: 1
+						Age [> 17.0] [size = 1]: 0
+			Age ∈ (18.5, 21.5) [size = 6]:
+				========== Age ==========
+				Age [<= 20.5] [size = 3]: 1
+				Age [> 20.5] [size = 3]: 0
+			Age ∈ (21.5, 28.75) [size = 11]: 1
+			Age ∈ (28.75, inf) [size = 6]:
+				========== Parents/Children Aboard ==========
+				Parents/Children Aboard [0] [size = 5]:
+					========== Fare ==========
+					Fare ∈ (7.74, 7.77) [size = 3]:
+						========== Age ==========
+						Age [<= 31.75] [size = 1]: 0
+						Age [> 31.75] [size = 2]:
+							========== Age ==========
+							Age [<= 39.0] [size = 1]: 1
+							Age [> 39.0] [size = 1]: 0
+					Fare ∈ (7.77, 7.89) [size = 2]:
+						========== Fare ==========
+						Fare [<= 7.82085] [size = 1]: 1
+						Fare [> 7.82085] [size = 1]: 0
+				Parents/Children Aboard [2] [size = 1]: 0
+		Fare ∈ (7.89, 23.35) [size = 74]:
+			========== Fare ==========
+			Fare ∈ (7.89, 10.82) [size = 24]:
+				========== Siblings/Spouses Aboard ==========
+				Siblings/Spouses Aboard [0] [size = 18]:
+					========== Age ==========
+					Age [<= 19.0] [size = 4]:
+						========== Age ==========
+						Age [<= 8.5] [size = 1]: 0
+						Age [> 8.5] [size = 3]: 1
+					Age [> 19.0] [size = 14]:
+						========== Age ==========
+						Age [<= 62.5] [size = 13]:
+							========== Age ==========
+							Age [<= 25.5] [size = 5]: 0
+							Age [> 25.5] [size = 8]:
+								========== Age ==========
+								Age [<= 27.5] [size = 1]: 1
+								Age [> 27.5] [size = 7]:
+									========== Fare ==========
+									Fare [<= 8.672899999999998] [size = 5]: 0
+									Fare [> 8.672899999999998] [size = 2]:
+										========== Age ==========
+										Age [<= 34.0] [size = 1]: 1
+										Age [> 34.0] [size = 1]: 0
+						Age [> 62.5] [size = 1]: 1
+				Siblings/Spouses Aboard [1] [size = 5]: 0
+				Siblings/Spouses Aboard [4] [size = 1]: 1
+			Fare ∈ (10.82, 15.37) [size = 20]:
+				========== Age ==========
+				Age [<= 7.0] [size = 4]: 1
+				Age [> 7.0] [size = 16]:
+					========== Age ==========
+					Age [<= 35.0] [size = 13]:
+						========== Age ==========
+						Age [<= 23.0] [size = 8]:
+							========== Age ==========
+							Age [<= 16.0] [size = 4]:
+								========== Parents/Children Aboard ==========
+								Parents/Children Aboard [1] [size = 1]: 0
+								Parents/Children Aboard [0] [size = 3]:
+									========== Age ==========
+									Age [<= 14.25] [size = 1]: 1
+									Age [> 14.25] [size = 2]:
+										========== Age ==========
+										Age [<= 14.75] [size = 1]: 0
+										Age [> 14.75] [size = 1]: 1
+							Age [> 16.0] [size = 4]: 0
+						Age [> 23.0] [size = 5]:
+							========== Siblings/Spouses Aboard ==========
+							Siblings/Spouses Aboard [0] [size = 4]: 1
+							Siblings/Spouses Aboard [1] [size = 1]: 0
+					Age [> 35.0] [size = 3]: 0
+			Fare ∈ (15.37, 23.35) [size = 30]:
+				========== Age ==========
+				Age ∈ (-inf, 6.5) [size = 8]:
+					========== Siblings/Spouses Aboard ==========
+					Siblings/Spouses Aboard [1] [size = 2]: 1
+					Siblings/Spouses Aboard [0] [size = 2]: 1
+					Siblings/Spouses Aboard [3] [size = 1]: 0
+					Siblings/Spouses Aboard [2] [size = 3]: 1
+				Age ∈ (6.5, 28.5) [size = 12]:
+					========== Parents/Children Aboard ==========
+					Parents/Children Aboard [1] [size = 1]: 0
+					Parents/Children Aboard [0] [size = 8]:
+						========== Fare ==========
+						Fare [<= 15.975000000000001] [size = 4]: 1
+						Fare [> 15.975000000000001] [size = 4]:
+							========== Age ==========
+							Age [<= 27.0] [size = 3]: 0
+							Age [> 27.0] [size = 1]: 1
+					Parents/Children Aboard [2] [size = 2]: 1
+					Parents/Children Aboard [3] [size = 1]: 1
+				Age ∈ (28.5, 32.5) [size = 4]:
+					========== Parents/Children Aboard ==========
+					Parents/Children Aboard [0] [size = 1]: 0
+					Parents/Children Aboard [1] [size = 2]:
+						========== Age ==========
+						Age [<= 31.5] [size = 1]: 1
+						Age [> 31.5] [size = 1]: 0
+					Parents/Children Aboard [4] [size = 1]: 0
+				Age ∈ (32.5, inf) [size = 6]:
+					========== Parents/Children Aboard ==========
+					Parents/Children Aboard [0] [size = 4]: 1
+					Parents/Children Aboard [2] [size = 1]: 0
+					Parents/Children Aboard [1] [size = 1]: 1
+		Fare ∈ (23.35, inf) [size = 27]:
+			========== Parents/Children Aboard ==========
+			Parents/Children Aboard [1, 3, 4, 6, 2] [size = 22]: 0
+			Parents/Children Aboard [5, 0] [size = 5]:
+				========== Age ==========
+				Age [<= 38.5] [size = 2]: 1
+				Age [> 38.5] [size = 3]: 0
+	Pclass [2] [size = 76]: 1
+	Pclass [1, 4] [size = 95]: 1

@@ -11,6 +11,6 @@ Sex ['male'] [size = 573]:
 	Age ∈ (22.5, inf) [size = 397]: 0
 Sex ['female'] [size = 314]:
 	========== Pclass ==========
-	Pclass ['3'] [size = 143]: 0
-	Pclass ['2'] [size = 76]: 1
-	Pclass ['1', 'asd'] [size = 95]: 1
+	Pclass [3] [size = 143]: 0
+	Pclass [2] [size = 76]: 1
+	Pclass [1, 4] [size = 95]: 1

@@ -4,62 +4,36 @@ import DecisionTree as dt
 import DataPreparation as dp
 import DecisionMaker as dm
 
-#data1 = pd.read_csv("data/iris.csv")
-#dtg1 = dt.DecisionTreeGenerator(data1)
-#dtg1.generate()
-#dtg1.treeRoot.print()
+# data1 = pd.read_csv("data/iris.csv")
+# dtg1 = dt.DecisionTreeGenerator(data1)
+# dtg1.generate(maxNumRecordsToSkipSplitting=1)
+# dtg1.treeRoot.print(indentation=30*' ', numOfTabsBetweenLevels=2)
 
-print()
-
-data2 = pd.read_csv("data/creditRisk.csv")
-#dpp = dp.DataPrep(data2, list(data2)[:-1])
-dtg2 = dt.DecisionTreeGenerator(data2)
-dtg2.generate(maxNumRecordsToSkipSplitting=1)
-dtg2.treeRoot.print()
-data3 = pd.read_csv("data/creditRisk2.csv")
-decisionMaker = dm.DecisionMaker(data3, dtg2.treeRoot)
-decisionMaker.DecisionMaking(dtg2.treeRoot)
-print(data3)
+# data2 = pd.read_csv("data/creditRisk.csv")
+# dpp = dp.DataPrep(data2, list(data2)[:-1])
+# dtg2 = dt.DecisionTreeGenerator(data2)
+# dtg2.generate(maxNumRecordsToSkipSplitting=1)
 # dtg2.treeRoot.print()
 
-#data3 = pd.read_csv("data/titanic.csv")
-#data3 = data3.astype({'Pclass':'category', 'Siblings/Spouses Aboard':'category', 'Parents/Children Aboard':'category'}, copy=False)
-#dtg3 = dt.DecisionTreeGenerator(data3)
-#dtg3.generate(maxNumRecordsToSkipSplitting=1)
-#dtg3.treeRoot.print()
-#data3 = pd.read_csv("data/titanic2.csv")
-#decisionMaker = dm.DecisionMaker(data3, dtg3.treeRoot)
-#decisionMaker.DecisionMaking(dtg3.treeRoot)
-#print(dtg3.treeRoot.childNodes[0].name)
+# data3 = pd.read_csv("data/creditRisk2.csv")
+# decisionMaker = dm.DecisionMaker(data3, dtg2.treeRoot)
+# decisionMaker.DecisionMaking(dtg2.treeRoot)
+# print(data3)
+# dtg2.treeRoot.print()
 
-#dtg3.prune(10)
-#f = open('data/titanic.txt', mode='w', encoding='utf-8')
-#dtg3.treeRoot.print(file=f)
+data3 = pd.read_csv("data/titanic2.csv")
+data3 = data3.astype({'Pclass':'category', 'Siblings/Spouses Aboard':'category', 'Parents/Children Aboard':'category'}, copy=False)
+dtg3 = dt.DecisionTreeGenerator(data3)
+dtg3.generate()
 
-# testData = pd.read_csv("data/titanicTest.csv")
-# print(dtg3.classify(testData.iloc[:,:-1]))
+# decisionMaker = dm.DecisionMaker(data3, dtg3.treeRoot)
+# decisionMaker.DecisionMaking(dtg3.treeRoot)
+# print(dtg3.treeRoot.childNodes[0].name)
 
-# x = data3["Age"].values
-# y = data3["Survived"].values
-# optb = MulticlassOptimalBinning(min_n_bins=2, max_n_bins=4)
-# optb.fit(x, y)
-# bt = optb.binning_table.build()
-# print(bt)
-# btRanges = bt['Bin'].head(-3)
-# btRanges.iloc[0] = btRanges.iloc[0].replace('-inf', "'-inf'")
-# btRanges.iloc[-1] = btRanges.iloc[-1].replace('inf', "'inf'")
-# lst = [literal_eval(x.replace('[', '(')) for x in btRanges]
-# lst = [(-np.inf, x[1]) if x[0] == '-inf' else ((x[0], np.inf) if x[1] == 'inf' else (x[0], x[1])) for x in lst]
-
-# x = data2["Savings"]
-# y = data2["Credit_Risk"].astype('category').cat.codes.values
-# # y = set(y)
-# # y = [x for x in range(len(y))]
-# print(y)
-# optb = OptimalBinning(dtype='categorical', min_n_bins=2, max_n_bins=5)
-# optb.fit(x, y)
-# bt = optb.binning_table.build()
-# print(bt)
+dtg3.prune(10)
+f = open('data/titanicPruned.txt', mode='w', encoding='utf-8')
+dtg3.treeRoot.print(file=f)
+f.close()
 
 
 #print()

@@ -1,0 +1,62 @@
+========== Sex ==========
+Sex ['male'] [size = 573]:
+	========== Age ==========
+	Age ∈ (-inf, 13.0) [size = 41]:
+		========== Siblings/Spouses Aboard ==========
+		Siblings/Spouses Aboard [3, 5, 8, 4] [size = 17]: 0
+		Siblings/Spouses Aboard [0] [size = 7]: 1
+		Siblings/Spouses Aboard [1, 2] [size = 17]: 1
+	Age ∈ (13.0, 20.25) [size = 89]:
+		========== Fare ==========
+		Fare ∈ (-inf, 7.76) [size = 25]: 0
+		Fare ∈ (7.76, 8.1) [size = 22]: 0
+		Fare ∈ (8.1, 16.87) [size = 23]: 0
+		Fare ∈ (16.87, inf) [size = 19]: 0
+	Age ∈ (20.25, 22.5) [size = 46]: 0
+	Age ∈ (22.5, inf) [size = 397]:
+		========== Fare ==========
+		Fare ∈ (-inf, 13.93) [size = 217]:
+			========== Age ==========
+			Age ∈ (22.5, 32.5) [size = 123]:
+				========== Age ==========
+				Age ∈ (22.5, 29.5) [size = 90]:
+					========== Fare ==========
+					Fare ∈ (-inf, 7.18) [size = 8]: 0
+					Fare ∈ (7.18, 7.83) [size = 23]: 0
+					Fare ∈ (7.83, 7.91) [size = 21]: 0
+					Fare ∈ (7.91, 13.93) [size = 38]:
+						========== Fare ==========
+						Fare ∈ (7.91, 8.56) [size = 10]: 0
+						Fare ∈ (8.56, 8.94) [size = 2]: 0
+						Fare ∈ (8.94, 10.0) [size = 7]: 0
+						Fare ∈ (10.0, 13.93) [size = 19]: 0
+				Age ∈ (29.5, 30.75) [size = 18]: 0
+				Age ∈ (30.75, 32.5) [size = 15]: 0
+			Age ∈ (32.5, 45.25) [size = 66]: 0
+			Age ∈ (45.25, inf) [size = 28]: 0
+		Fare ∈ (13.93, 26.27) [size = 58]: 0
+		Fare ∈ (26.27, 52.28) [size = 72]:
+			========== Fare ==========
+			Fare ∈ (26.27, 29.85) [size = 30]: 0
+			Fare ∈ (29.85, 30.6) [size = 10]: 1
+			Fare ∈ (30.6, 36.25) [size = 15]: 0
+			Fare ∈ (36.25, 52.28) [size = 17]: 0
+		Fare ∈ (52.28, inf) [size = 50]:
+			========== Fare ==========
+			Fare ∈ (52.28, 59.09) [size = 15]: 1
+			Fare ∈ (59.09, 143.56) [size = 27]: 0
+			Fare ∈ (143.56, inf) [size = 8]: 0
+Sex ['female'] [size = 314]:
+	========== Pclass ==========
+	Pclass [3] [size = 143]:
+		========== Fare ==========
+		Fare ∈ (-inf, 7.74) [size = 14]: 1
+		Fare ∈ (7.74, 7.89) [size = 28]: 1
+		Fare ∈ (7.89, 23.35) [size = 74]:
+			========== Fare ==========
+			Fare ∈ (7.89, 10.82) [size = 24]: 0
+			Fare ∈ (10.82, 15.37) [size = 20]: 0
+			Fare ∈ (15.37, 23.35) [size = 30]: 1
+		Fare ∈ (23.35, inf) [size = 27]: 0
+	Pclass [2] [size = 76]: 1
+	Pclass [1, 4] [size = 95]: 1

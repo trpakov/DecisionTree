@@ -17,6 +17,7 @@ class DecisionTreeGenerator:
         self.treeRoot = None
         self.numOfLeafNodes = 0 # number of terminal nodes
         self.twigs = {} # dict with nodes that have only leaf nodes (keys) and their info gain (values)
+        self.numericAttrRanges = {x: [[[(-np.inf, np.inf)]], 0] for x in self.inputVars} # dict with parent ranges for repeating numeric attributes, used when repeatAttributes is True
 
     def checkIfOnlyOneClass(self, data):
         '''Check if all entries in given dataframe belong to the same class, if true - return class name'''
@@ -89,7 +90,7 @@ class DecisionTreeGenerator:
     #         if str(self.data[c].dtype) != 'category' and self.data[c].nunique()/self.data[c].count() < 0.05:
     #             self.data = self.data.astype({c:'category'})
 
-    def splitData(self, data, availableAttributes, numericAttrBinning):
+    def splitData(self, data, availableAttributes, numericAttrBinning, repeatAttributes):
         '''Given a list of available attributes chooses a split that has 
         the largest information gain. Returns the chosen attribute, the 
         subsets of the dataframe resulting from the split, the best split 
@@ -182,16 +183,32 @@ class DecisionTreeGenerator:
                             bestSubsets = [lowerSubset, higherSubset]
                             splitAttrib = attr
                             bestSplitThreshold = currentThreshold
+                            bestRanges = None
+
+        # fix ranges if repeatingAttributes
+        if bestRanges and repeatAttributes:
+            parentRanges = self.numericAttrRanges[splitAttrib][0][self.numericAttrRanges[splitAttrib][1]]
+            checkValue = data[splitAttrib].iloc[0]
+            parentRange = next(rng for rng in parentRanges if checkValue >= rng[0] and checkValue < rng[1])
+            bestRanges[0] = (parentRange[0], bestRanges[0][1])
+            bestRanges[-1] = (bestRanges[-1][0], parentRange[-1])
+            
+            self.numericAttrRanges[splitAttrib][1] += 1
+
+            if self.numericAttrRanges[splitAttrib][1] in range(0, len(self.numericAttrRanges[splitAttrib][0])):
+                self.numericAttrRanges[splitAttrib][0][self.numericAttrRanges[splitAttrib][1]] = bestRanges
+            else:
+                self.numericAttrRanges[splitAttrib][0].append(bestRanges)
 
         return (splitAttrib, bestSubsets, bestSplitThreshold, bestRanges, bestGain)
 
-    def generate(self, numericAttrBinning=True, maxNumRecordsToSkipSplitting=30):
+    def generate(self, numericAttrBinning=True, maxNumRecordsToSkipSplitting=30, repeatAttributes=False):
         '''Calls generateTree function for the dataframe assigned to the current instance of 
         DecisionTreeGenerator, considering all input variables. 
         Assigns the result to treeRoot data atribute of the instance.'''
-        self.treeRoot = self.generateTree(self.data, self.inputVars, numericAttrBinning, maxNumRecordsToSkipSplitting=maxNumRecordsToSkipSplitting)
+        self.treeRoot = self.generateTree(self.data, self.inputVars, numericAttrBinning, maxNumRecordsToSkipSplitting=maxNumRecordsToSkipSplitting, repeatAttributes=repeatAttributes)
 
-    def generateTree(self, data, availableAttributes, numericAttrBinning, dataRange=None, maxNumRecordsToSkipSplitting=30):
+    def generateTree(self, data, availableAttributes, numericAttrBinning, dataRange=None, maxNumRecordsToSkipSplitting=30, repeatAttributes=False):
         '''Recursively generates a decision tree for given dataframe and 
         list of attributes. Returns an instance of class Node'''
         # Stopping criteria
@@ -216,7 +233,7 @@ class DecisionTreeGenerator:
             clasWithMostRecords = self.getClassWithMostRecords(data)
             return Node(name=clasWithMostRecords, threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
 
-        splitResult = self.splitData(data, availableAttributes, numericAttrBinning)
+        splitResult = self.splitData(data, availableAttributes, numericAttrBinning, repeatAttributes)
         remainingAvailableAttribues = availableAttributes.copy()
 
         # if no suitable attribute to split on
@@ -225,19 +242,18 @@ class DecisionTreeGenerator:
             clasWithMostRecords = self.getClassWithMostRecords(data)
             return Node(name=clasWithMostRecords, threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
 
-        #if splitResult[2] is None: # If attr is categorical, remove it from available attributes
-        remainingAvailableAttribues.remove(splitResult[0])
+        if repeatAttributes is False: # Remove current attribute from available attributes if user does not want repetition
+            remainingAvailableAttribues.remove(splitResult[0])
 
         decisionNode = Node(name=splitResult[0], threshold=splitResult[2], isLeafNode=False, data=data, dataRange=dataRange, gain=splitResult[4])
         # Recursive call for all subsets resulting from the split
         if splitResult[3] is None:          
-            decisionNode.childNodes = [self.generateTree(subset, remainingAvailableAttribues, numericAttrBinning, maxNumRecordsToSkipSplitting=maxNumRecordsToSkipSplitting) for subset in splitResult[1]]
+            decisionNode.childNodes = [self.generateTree(subset, remainingAvailableAttribues, numericAttrBinning, maxNumRecordsToSkipSplitting=maxNumRecordsToSkipSplitting, repeatAttributes=repeatAttributes) for subset in splitResult[1]]
         else: # if the split was done with binning, send the range to the next recursive call
-            decisionNode.childNodes = [self.generateTree(subset, remainingAvailableAttribues, numericAttrBinning, dataRange=dataRng, maxNumRecordsToSkipSplitting=maxNumRecordsToSkipSplitting) for (subset, dataRng) in zip(splitResult[1], splitResult[3])]
+            decisionNode.childNodes = [self.generateTree(subset, remainingAvailableAttribues, numericAttrBinning, dataRange=dataRng, maxNumRecordsToSkipSplitting=maxNumRecordsToSkipSplitting, repeatAttributes=repeatAttributes) for (subset, dataRng) in zip(splitResult[1], splitResult[3])]
 
-        # # Remove child node elements of type None, generated if split was not possible
-        # decisionNode.childNodes = [node for node in decisionNode.childNodes if node is not None]
-
+        if repeatAttributes and splitResult[3]:
+            self.numericAttrRanges[splitResult[0]][1] -= 1
         return decisionNode
 
     def generateTwigsDict(self, node=None):

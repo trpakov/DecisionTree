@@ -16,8 +16,8 @@ Sex ['male'] [size = 573]:
 			========== Siblings/Spouses Aboard ==========
 			Siblings/Spouses Aboard [0] [size = 21]:
 				========== Pclass ==========
-				Pclass ['3'] [size = 20]: 0
-				Pclass ['2'] [size = 1]: 0
+				Pclass [3] [size = 20]: 0
+				Pclass [2] [size = 1]: 0
 			Siblings/Spouses Aboard [1] [size = 4]: 0
 		Fare ∈ (7.76, 8.1) [size = 22]:
 			========== Siblings/Spouses Aboard ==========
@@ -37,26 +37,26 @@ Sex ['male'] [size = 573]:
 				========== Parents/Children Aboard ==========
 				Parents/Children Aboard [0] [size = 208]:
 					========== Pclass ==========
-					Pclass ['1', '3'] [size = 159]: 0
-					Pclass ['2'] [size = 49]: 0
+					Pclass [1, 3] [size = 159]: 0
+					Pclass [2] [size = 49]: 0
 				Parents/Children Aboard [1] [size = 1]: 0
 			Siblings/Spouses Aboard [2] [size = 4]: 0
 			Siblings/Spouses Aboard [1] [size = 4]: 0
 		Fare ∈ (13.93, 26.27) [size = 58]: 0
 		Fare ∈ (26.27, 52.28) [size = 72]:
 			========== Pclass ==========
-			Pclass ['1'] [size = 62]:
+			Pclass [1] [size = 62]:
 				========== Parents/Children Aboard ==========
 				Parents/Children Aboard [0] [size = 61]:
 					========== Siblings/Spouses Aboard ==========
 					Siblings/Spouses Aboard [0] [size = 58]: 0
 					Siblings/Spouses Aboard [1] [size = 3]: 0
 				Parents/Children Aboard [1] [size = 1]: 0
-			Pclass ['3'] [size = 2]: 0
-			Pclass ['2'] [size = 8]: 0
+			Pclass [3] [size = 2]: 0
+			Pclass [2] [size = 8]: 0
 		Fare ∈ (52.28, inf) [size = 50]:
 			========== Pclass ==========
-			Pclass ['2', '1'] [size = 43]:
+			Pclass [2, 1] [size = 43]:
 				========== Siblings/Spouses Aboard ==========
 				Siblings/Spouses Aboard [2] [size = 4]: 0
 				Siblings/Spouses Aboard [0] [size = 15]:
@@ -67,10 +67,10 @@ Sex ['male'] [size = 573]:
 					========== Parents/Children Aboard ==========
 					Parents/Children Aboard [4, 1] [size = 6]: 0
 					Parents/Children Aboard [0, 2] [size = 18]: 1
-			Pclass ['3'] [size = 7]: 1
+			Pclass [3] [size = 7]: 1
 Sex ['female'] [size = 314]:
 	========== Pclass ==========
-	Pclass ['3'] [size = 143]:
+	Pclass [3] [size = 143]:
 		========== Fare ==========
 		Fare ∈ (-inf, 7.74) [size = 14]:
 			========== Age ==========
@@ -134,5 +134,5 @@ Sex ['female'] [size = 314]:
 				========== Age ==========
 				Age [<= 38.5] [size = 2]: 1
 				Age [> 38.5] [size = 3]: 0
-	Pclass ['2'] [size = 76]: 1
-	Pclass ['1', 'asd'] [size = 95]: 1
+	Pclass [2] [size = 76]: 1
+	Pclass [1, 4] [size = 95]: 1
