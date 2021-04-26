@@ -10,16 +10,15 @@ import DecisionMaker as dm
 #dtg1.treeRoot.print()
 
 # print()
-
-# data2 = pd.read_csv("data/iris.csv")
-# #dpp = dp.DataPrep(data2, list(data2)[:-1])
-# dtg2 = dt.DecisionTreeGenerator(data2)
-# dtg2.generate(maxNumRecordsToSkipSplitting=1)
-# dtg2.treeRoot.print()
-# data3 = pd.read_csv("data/iris2.csv")
-# decisionMaker = dm.DecisionMaker(data3, dtg2.treeRoot)
-# decisionMaker.DecisionMaking(dtg2.treeRoot)
-# print(data3)
+data2 = pd.read_csv("data/titanic2.csv")
+dpp = dp.DataPrep(data2, list(data2)[:-1])
+dtg2 = dt.DecisionTreeGenerator(data2)
+dtg2.generate(maxNumRecordsToSkipSplitting=1)
+dtg2.treeRoot.print()
+data3 = pd.read_csv("data/titanic3.csv")
+decisionMaker = dm.DecisionMaker(data3, dtg2.treeRoot)
+decisionMaker.DecisionMaking(dtg2.treeRoot)
+print(data3)
 
 #data2 = pd.read_csv("data/iris.csv")
 #dtg2 = dt.DecisionTreeGenerator(data2)
@@ -33,19 +32,19 @@ import DecisionMaker as dm
 # print(data3)
 # dtg2.treeRoot.print()
 
-data3 = pd.read_csv("data/titanic2.csv")
-data3 = data3.astype({'Pclass':'category', 'Siblings/Spouses Aboard':'category', 'Parents/Children Aboard':'category'}, copy=False)
-dtg3 = dt.DecisionTreeGenerator(data3)
-dtg3.generate()
+#data3 = pd.read_csv("data/titanic2.csv")
+#data3 = data3.astype({'Pclass':'category', 'Siblings/Spouses Aboard':'category', 'Parents/Children Aboard':'category'}, copy=False)
+#dtg3 = dt.DecisionTreeGenerator(data3)
+#dtg3.generate()
 
 # decisionMaker = dm.DecisionMaker(data3, dtg3.treeRoot)
 # decisionMaker.DecisionMaking(dtg3.treeRoot)
 # print(dtg3.treeRoot.childNodes[0].name)
 
-dtg3.prune(10)
-f = open('data/titanicPruned.txt', mode='w', encoding='utf-8')
-dtg3.treeRoot.print(file=f)
-f.close()
+#dtg3.prune(10)
+#f = open('data/titanicPruned.txt', mode='w', encoding='utf-8')
+#dtg3.treeRoot.print(file=f)
+#f.close()
 
 
 #print()
