@@ -4,15 +4,27 @@ import DecisionTree as dt
 import DataPreparation as dp
 import DecisionMaker as dm
 
-# data1 = pd.read_csv("data/iris.csv")
-# dtg1 = dt.DecisionTreeGenerator(data1)
-# dtg1.generate(maxNumRecordsToSkipSplitting=1)
-# dtg1.treeRoot.print(indentation=30*' ', numOfTabsBetweenLevels=2)
+#data1 = pd.read_csv("data/iris.csv")
+#dtg1 = dt.DecisionTreeGenerator(data1)
+#dtg1.generate()
+#dtg1.treeRoot.print()
 
-# data2 = pd.read_csv("data/creditRisk.csv")
-# dpp = dp.DataPrep(data2, list(data2)[:-1])
+# print()
+
+# data2 = pd.read_csv("data/iris.csv")
+# #dpp = dp.DataPrep(data2, list(data2)[:-1])
 # dtg2 = dt.DecisionTreeGenerator(data2)
 # dtg2.generate(maxNumRecordsToSkipSplitting=1)
+# dtg2.treeRoot.print()
+# data3 = pd.read_csv("data/iris2.csv")
+# decisionMaker = dm.DecisionMaker(data3, dtg2.treeRoot)
+# decisionMaker.DecisionMaking(dtg2.treeRoot)
+# print(data3)
+
+#data2 = pd.read_csv("data/iris.csv")
+#dtg2 = dt.DecisionTreeGenerator(data2)
+#dtg2.generate()
+#dtg2.treeRoot.print()
 # dtg2.treeRoot.print()
 
 # data3 = pd.read_csv("data/creditRisk2.csv")
