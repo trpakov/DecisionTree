@@ -90,7 +90,7 @@ class DecisionTreeGenerator:
     #         if str(self.data[c].dtype) != 'category' and self.data[c].nunique()/self.data[c].count() < 0.05:
     #             self.data = self.data.astype({c:'category'})
 
-    def splitData(self, data, availableAttributes, numericAttrBinning, repeatAttributes):
+    def splitData(self, data, availableAttributes, numericAttrBinning, repeatAttributes, minNumRecordsLeafNode):
         '''Given a list of available attributes chooses a split that has 
         the largest information gain. Returns the chosen attribute, the 
         subsets of the dataframe resulting from the split, the best split 
@@ -122,7 +122,10 @@ class DecisionTreeGenerator:
 
                 else: # otherwise create subset for each value (category) of the attribute
                     subsets = [grouped.get_group(x) for x in data[attr].unique()]
-                    
+
+                if any(len(subset) for subset in subsets if len(subset) < minNumRecordsLeafNode):
+                    continue # skip if there are too small subsets
+
                 infoGain = self.calculateInformationGain(data, subsets)
 
                 if infoGain >= bestGain:
@@ -158,6 +161,9 @@ class DecisionTreeGenerator:
                     # create subsets according to the ranges
                     subsets = [data.loc[(data[attr] >= r[0]) & (data[attr] < r[1])] for r in ranges]
 
+                    if any(len(subset) for subset in subsets if len(subset) < minNumRecordsLeafNode):
+                        continue # skip if there are too small subsets
+
                     infoGain = self.calculateInformationGain(data, subsets)
 
                     if infoGain >= bestGain:
@@ -176,6 +182,10 @@ class DecisionTreeGenerator:
                         currentThreshold = (sortedData[attr].iloc[i] + sortedData[attr].iloc[i + 1]) / 2
                         lowerSubset = sortedData[sortedData[attr] <= currentThreshold]
                         higherSubset = sortedData[sortedData[attr] > currentThreshold]
+
+                        if len(lowerSubset) < minNumRecordsLeafNode or len(higherSubset) < minNumRecordsLeafNode:
+                            continue # skip if there are too small subsets
+
                         infoGain = self.calculateInformationGain(sortedData, [lowerSubset, higherSubset])
 
                         if infoGain > bestGain:
@@ -202,13 +212,13 @@ class DecisionTreeGenerator:
 
         return (splitAttrib, bestSubsets, bestSplitThreshold, bestRanges, bestGain)
 
-    def generate(self, numericAttrBinning=True, maxNumRecordsToSkipSplitting=30, repeatAttributes=False):
+    def generate(self, numericAttrBinning=True, minNumRecordsLeafNode=10, repeatAttributes=False):
         '''Calls generateTree function for the dataframe assigned to the current instance of 
         DecisionTreeGenerator, considering all input variables. 
         Assigns the result to treeRoot data atribute of the instance.'''
-        self.treeRoot = self.generateTree(self.data, self.inputVars, numericAttrBinning, maxNumRecordsToSkipSplitting=maxNumRecordsToSkipSplitting, repeatAttributes=repeatAttributes)
+        self.treeRoot = self.generateTree(self.data, self.inputVars, numericAttrBinning, minNumRecordsLeafNode=minNumRecordsLeafNode, repeatAttributes=repeatAttributes)
 
-    def generateTree(self, data, availableAttributes, numericAttrBinning, dataRange=None, maxNumRecordsToSkipSplitting=30, repeatAttributes=False):
+    def generateTree(self, data, availableAttributes, numericAttrBinning, dataRange=None, minNumRecordsLeafNode=10, repeatAttributes=False):
         '''Recursively generates a decision tree for given dataframe and 
         list of attributes. Returns an instance of class Node'''
         # Stopping criteria
@@ -222,10 +232,10 @@ class DecisionTreeGenerator:
             clasWithMostRecords = self.getClassWithMostRecords(data)
             return Node(name=clasWithMostRecords, threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
 
-        if len(data) <= maxNumRecordsToSkipSplitting:
-            self.numOfLeafNodes += 1
-            clasWithMostRecords = self.getClassWithMostRecords(data)
-            return Node(name=clasWithMostRecords, threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
+        # if len(data) <= maxNumRecordsToSkipSplitting:
+        #     self.numOfLeafNodes += 1
+        #     clasWithMostRecords = self.getClassWithMostRecords(data)
+        #     return Node(name=clasWithMostRecords, threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
 
         # if more than 90% of the records in data belong to the same class
         if (Counter(data.iloc[:, -1].values).most_common(1)[0][1] / len(data)) * 100 > 90:
@@ -233,7 +243,7 @@ class DecisionTreeGenerator:
             clasWithMostRecords = self.getClassWithMostRecords(data)
             return Node(name=clasWithMostRecords, threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
 
-        splitResult = self.splitData(data, availableAttributes, numericAttrBinning, repeatAttributes)
+        splitResult = self.splitData(data, availableAttributes, numericAttrBinning, repeatAttributes, minNumRecordsLeafNode)
         remainingAvailableAttribues = availableAttributes.copy()
 
         # if no suitable attribute to split on
@@ -248,9 +258,9 @@ class DecisionTreeGenerator:
         decisionNode = Node(name=splitResult[0], threshold=splitResult[2], isLeafNode=False, data=data, dataRange=dataRange, gain=splitResult[4])
         # Recursive call for all subsets resulting from the split
         if splitResult[3] is None:          
-            decisionNode.childNodes = [self.generateTree(subset, remainingAvailableAttribues, numericAttrBinning, maxNumRecordsToSkipSplitting=maxNumRecordsToSkipSplitting, repeatAttributes=repeatAttributes) for subset in splitResult[1]]
+            decisionNode.childNodes = [self.generateTree(subset, remainingAvailableAttribues, numericAttrBinning, minNumRecordsLeafNode=minNumRecordsLeafNode, repeatAttributes=repeatAttributes) for subset in splitResult[1]]
         else: # if the split was done with binning, send the range to the next recursive call
-            decisionNode.childNodes = [self.generateTree(subset, remainingAvailableAttribues, numericAttrBinning, dataRange=dataRng, maxNumRecordsToSkipSplitting=maxNumRecordsToSkipSplitting, repeatAttributes=repeatAttributes) for (subset, dataRng) in zip(splitResult[1], splitResult[3])]
+            decisionNode.childNodes = [self.generateTree(subset, remainingAvailableAttribues, numericAttrBinning, dataRange=dataRng, minNumRecordsLeafNode=minNumRecordsLeafNode, repeatAttributes=repeatAttributes) for (subset, dataRng) in zip(splitResult[1], splitResult[3])]
 
         if repeatAttributes and splitResult[3]:
             self.numericAttrRanges[splitResult[0]][1] -= 1

@@ -2,10 +2,12 @@
 Sex ['male'] [size = 573]:
 	========== Age ==========
 	Age ∈ (-inf, 13.0) [size = 41]:
-		========== Siblings/Spouses Aboard ==========
-		Siblings/Spouses Aboard [3, 5, 8, 4] [size = 17]: 0
-		Siblings/Spouses Aboard [0] [size = 7]: 1
-		Siblings/Spouses Aboard [1, 2] [size = 17]: 1
+		========== Parents/Children Aboard ==========
+		Parents/Children Aboard [0, 2] [size = 18]: 0
+		Parents/Children Aboard [1] [size = 23]:
+			========== Fare ==========
+			Fare [<= 19.9125] [size = 10]: 1
+			Fare [> 19.9125] [size = 13]: 0
 	Age ∈ (13.0, 20.25) [size = 89]: 0
 	Age ∈ (20.25, 22.5) [size = 46]: 0
 	Age ∈ (22.5, inf) [size = 397]: 0
