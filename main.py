@@ -42,11 +42,14 @@ dtg3.generate()
 # decisionMaker.DecisionMaking(dtg3.treeRoot)
 # print(dtg3.treeRoot.childNodes[0].name)
 
-dtg3.prune(10)
-f = open('data/titanicPruned.txt', mode='w', encoding='utf-8')
+#dtg3.prune(10)
+f = open('data/titanic.txt', mode='w', encoding='utf-8')
 dtg3.treeRoot.print(file=f)
 f.close()
 
+testData = pd.read_csv("data/TitanicTest.csv")
+dtg3.classify(testData)
+testData.to_csv('data/TitanicResult.csv', index=False)
 
 #print()
 

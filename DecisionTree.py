@@ -301,6 +301,40 @@ class DecisionTreeGenerator:
             nodeWithLowestGain.name = self.getClassWithMostRecords(nodeWithLowestGain.data)
             #print('num of leaf nodes: ' + str(self.numOfLeafNodes))
 
+    def traverseTree(self, row, node=None):
+        '''Recursively traverses a structure of Nodes using values in 
+        dataframe row for navigation. Returns the class corresponding 
+        to the leaf node that was reached.'''
+        if node is None: # if node not specified, start from root
+            node = self.treeRoot
+
+        if node.isLeafNode: # if node is leaf, return its name (class of the target variable)
+            return node.name
+
+        if node.threshold: # if binary split using threshold
+            if row[node.name] <= node.threshold: # find correct child node
+                return self.traverseTree(row, node.childNodes[0])
+            else:
+                return self.traverseTree(row, node.childNodes[1])
+
+        if any(child for child in node.childNodes if child.dataRange): # if split into ranges using binning
+            return self.traverseTree(row, next(child for child in node.childNodes if row[node.name] >= child.dataRange[0] and row[node.name] < child.dataRange[1]))
+        else:
+            return self.traverseTree(row, next(child for child in node.childNodes if row[node.name] in child.data.loc[:, node.name].unique().tolist()))
+
+    def classify(self, data):
+        '''Classify records in given dataset using already constructed tree.'''
+        if self.treeRoot is None: # if tree not generated
+            raise ValueError('Generate tree before classifying')
+
+        if list(data) != self.inputVars: # if different attributes
+            raise ValueError('Test dataframe is different from training dataframe')
+
+        data[list(self.data)[-1]] = None # add empty column for target variable
+
+        for i, row in data.iterrows(): # for each row in test data
+            data.at[i, list(self.data)[-1]] = self.traverseTree(row) # set classification
+
 
 class Node:
 
