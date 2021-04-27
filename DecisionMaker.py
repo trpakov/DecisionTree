@@ -30,7 +30,11 @@ class DecisionMaker:
             for index, child in enumerate(node.childNodes):
                 if node.threshold is None:
                     if child.dataRange is None:
-                        branches_names.append(str(node.name) + ' ' + str(child.data.loc[:, node.name].unique().tolist()))
+                        branch_name = str(child.data.loc[:, node.name].unique().tolist()).replace('[', '').replace(']', '').replace(',', '').split(' ')
+                        if len(branch_name) > 1:
+                            branches_names.append(node.name + ' == ' + branch_name[0] + ' or ' + node.name + ' == ' + branch_name[1])
+                        else:
+                            branches_names.append(node.name + ' == ' + branch_name[0])
                     else:
                         branch_name = str(child.dataRange).replace('(', '').replace(',', '').replace(')', '').split(' ')
                         branches_names.append(node.name + ' > ' + branch_name[0] + ' and ' + node.name + ' < ' + branch_name[1])
@@ -43,7 +47,6 @@ class DecisionMaker:
                 break
 
             if isCategorical:
-                print(node.childNodes[branches_names.index(row[1][node.name])].name)
                 #Checking if row value branching is leaf
                 if node.childNodes[branches_names.index(row[1][node.name])].isLeafNode:
 
@@ -68,15 +71,15 @@ class DecisionMaker:
                     print(branch_name)
                     if eval(branch_name.replace('inf', '5000000')):
 
-                        print("in")
                         if node.childNodes[self.counter2].isLeafNode:
-                            new_dataSet.at[self.counter, 'species'] = node.childNodes[self.counter2].name
+                            new_dataSet.at[self.counter, 'Survived'] = node.childNodes[self.counter2].name
                             self.counter += 1
                             self.DecisionMaking(self.treeRoot)
                             return
 
                         else:
                             self.DecisionMaking(node.childNodes[self.counter2])
+                            break
 
                     self.counter2 += 1
 

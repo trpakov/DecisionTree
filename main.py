@@ -11,9 +11,10 @@ import DecisionMaker as dm
 
 # print()
 data2 = pd.read_csv("data/titanic2.csv")
+data2 = data2.astype({'Pclass':'category', 'Siblings/Spouses Aboard':'category', 'Parents/Children Aboard':'category'}, copy=False)
 dpp = dp.DataPrep(data2, list(data2)[:-1])
 dtg2 = dt.DecisionTreeGenerator(data2)
-dtg2.generate(maxNumRecordsToSkipSplitting=1)
+dtg2.generate()
 dtg2.treeRoot.print()
 data3 = pd.read_csv("data/titanic3.csv")
 decisionMaker = dm.DecisionMaker(data3, dtg2.treeRoot)
