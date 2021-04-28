@@ -7,6 +7,7 @@ from ast import literal_eval
 from collections import Counter
 
 class DecisionTreeGenerator:
+    '''Main class for tree generation, pruning and fitting.'''
 
     def __init__(self, data):
         self.data = data
@@ -84,11 +85,13 @@ class DecisionTreeGenerator:
 
         return 2 * prod(proportions) * sum(distances)
 
-    # def checkForCategoricalData(self):
-    #     '''Checks if the ratio between the number of unique and the total number of values for every input varialbe is lower than a user-defined threshold, if so - changes the type of the dataframe column to "category"'''
-    #     for c in self.data.columns:
-    #         if str(self.data[c].dtype) != 'category' and self.data[c].nunique()/self.data[c].count() < 0.05:
-    #             self.data = self.data.astype({c:'category'})
+    def checkForCategoricalData(self, threshold=0.05):
+        '''Checks if the ratio between the number of unique values and the total 
+        number of values for every attribute is lower than a user-defined 
+        threshold, if so - changes the type of the dataframe column to "category".'''
+        for c in self.data.columns:
+            if str(self.data[c].dtype) != 'category' and self.data[c].nunique()/self.data[c].count() < threshold:
+                self.data = self.data.astype({c:'category'})
 
     def splitData(self, data, availableAttributes, numericAttrBinning, repeatAttributes, minNumRecordsLeafNode):
         '''Given a list of available attributes chooses a split that has 
@@ -337,6 +340,7 @@ class DecisionTreeGenerator:
 
 
 class Node:
+    '''Class containing information for a single tree node.'''
 
     def __init__(self, name, threshold, isLeafNode, data, dataRange=None, gain=None):
         self.name = name
