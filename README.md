@@ -329,3 +329,70 @@ Tree function GenerateTree(dataset D)
 
     ##### Returns
     * `None`
+
+### DataPrep(data, attributes)
+
+* Class which methods help with data preparation
+
+#### Parameters
+
+* `data (pandas.DataFrame)` - Subset of training data.
+* `attributes (list)` - List of attribute names considered for splitting on.
+
+#### Methods
+
+* `fixCapitalization(self)` - Lowers the cases of all attributes.
+* `checkForNumericOutliersWithBoxPlot(self)` - Creates a box plot which helps you to determine if there are any numeric outliers.
+* `checkForNumericOutliersWithDescription(self)` - Creates desctiptions of all numerical attributes which helps you to determine if there are any numberic outliers.
+* `checkForCategoricalOutliers(self)` - Creates a plot, which helps you to determine if there are any categorical outliers.
+* `mergeCategoricalOutliers(self, attrName, thresholdPercent)` - Merges categorical outliers, classifies them as 'Other'.
+	
+	##### Parameters
+	* `attrName (str)` - The name of the attribute with the outliers that you want to merge.
+	* `thresholdPercent` - The records which are encountered under that percentage will be merged.
+
+* `createMissingDataHeapMap(self)` - Creates a heap map which helps you to determine if there is any missing data.
+* `checkMissingDataPercentageList(self)` - Creates a list which helps you to determine if there is any missing data.
+* `checkForNonUniqueValue(self)` - Checks for attributes with only non-unique values. If any - the attribute is removed.
+* `checkForDuplicatesAndRemoveIfAny(self)` - Checks for duplicates and removes them if any.
+
+### DecisionMaker(data, treeRoot)
+
+* Second variation of a classifier, which classifies records in given dataset using already constructed tree.
+
+#### Parameters
+
+* `data (pandas.DataFrame)` - Subset of training data.
+* `treeRoot (str)` - The name of the root of the tree.
+
+#### Properties
+
+* `new_dataSet (pandas.DataFrame)` - A new dataset, where the classified records will be saved.
+* `last_column_name (str)` - The name of the last attrbitue(the attribute that we expected to be classified by our algorithm).
+
+#### Methods
+
+* `DecisionMaking(node)` - The method, which makes the classification.
+	
+	#### Parameters
+	* `node (Node)` - You should always pass the treeRoot node as node in this method, because the crawling of the tree always begins with the root of the tree.
+	
+	#### Properties
+	* `branches_names (list)` - List which contains the names of all the branches of a node.
+	* `isCategorical (bool)` - A property which helps us to determine whether an attribute is categorical or numeric.
+	* `node_column_index (int)` - A property which holds the index of the node column
+
+The method first checks whether the root of the tree is NOT signed/unsigned integer; floating point; complex floating point, i.e. if the root is categorical. If it is
+categorical the method adds the branches names of the root in branches_names. For categorical nodes the branches_names are simply the records. For example if we have node
+'Assets' the branches names will be 'High', 'Low', 'Medium'. If the root is not categorical the method again adds all the branches names in the list branches_names, but the
+names for numeric nodes are not as simple as the names of categorical nodes. The names of the numeric nodes can be intervals, like 'Age ∈ (20.25, 22.5)' or just one or two
+values, for example 'Age [23]' or 'Age [23, 33]'. All the branches names are added in such way in the list so that we can use them as if statements. For example the 
+branch_name 'Age ∈ (20.25, 22.5)' in the three will be added in the list as '22 > 20.25 and 22 < 22.5', where '22' is the actual 'Age' of the current node. Then after we
+have the branches names of the current node in the list out method starts itterating through the rows of the dataset. If the current node is categorical we are checking
+whether the current row value branch is leaf. If it is leaf, we are adding the value of the leaf to the last column on the row (we are classificating the record) and we are 
+calling out method again with the treeRoot for the next row.If it is not leaf we are recursively calling the method with the non leaf node. If the current node is numeric our 
+method starts itterating through branches names. For each branch name our method replaces node name in branch name with row value, so that we have 'ROW_VALUE > 20.25 and
+ROW_VALUE < 22.5' instead of 'Age > 20.25 and Age < 22.5' for example. The next step in our method is to use the branch name as an if statement. If the if statement passes,
+i.e. if our ROW_VALUE is bigger than 20.25 and smaller than 22.5 for example, we are checking whether the child that the branch led us to is a leaf. If it is leaf, we are
+adding the value of the leaf to the last column on the row (we are classificating the record) and we are calling out method again with the treeRoot for the next row. If it is
+not leaf we are recursively calling the method with the non leaf node.
