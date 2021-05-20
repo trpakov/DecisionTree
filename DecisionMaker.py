@@ -51,7 +51,7 @@ class DecisionMaker:
                 if node.childNodes[branches_names.index(row[1][node.name])].isLeafNode:
 
                     #If it is leaf we are adding the value of the leaf to the last column on the row
-                    new_dataSet.at[self.counter, 'Survived'] = node.childNodes[branches_names.index(row[1][node.name])].name
+                    new_dataSet.at[self.counter, self.last_column_name] = node.childNodes[branches_names.index(row[1][node.name])].name
                     self.counter += 1
                     self.DecisionMaking(self.treeRoot)
                     return
@@ -72,7 +72,7 @@ class DecisionMaker:
                     if eval(branch_name.replace('inf', '5000000')):
 
                         if node.childNodes[self.counter2].isLeafNode:
-                            new_dataSet.at[self.counter, 'Survived'] = node.childNodes[self.counter2].name
+                            new_dataSet.at[self.counter, self.last_column_name] = node.childNodes[self.counter2].name
                             self.counter += 1
                             self.DecisionMaking(self.treeRoot)
                             return
