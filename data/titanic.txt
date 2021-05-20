@@ -3,44 +3,44 @@ Sex ['male'] [size = 573]:
 	========== Age ==========
 	Age ∈ (-inf, 13.0) [size = 41]:
 		========== Parents/Children Aboard ==========
-		Parents/Children Aboard [0, 2] [size = 18]: 0
+		Parents/Children Aboard [0, 2] [size = 18]: 0 [50.0%]
 		Parents/Children Aboard [1] [size = 23]:
 			========== Fare ==========
-			Fare [<= 19.9125] [size = 10]: 1
-			Fare [> 19.9125] [size = 13]: 0
+			Fare [<= 19.9125] [size = 10]: 1 [100.0%]
+			Fare [> 19.9125] [size = 13]: 0 [69.23%]
 	Age ∈ (13.0, 20.25) [size = 89]:
 		========== Fare ==========
-		Fare ∈ (-inf, 7.76) [size = 25]: 0
-		Fare ∈ (7.76, 8.1) [size = 22]: 0
-		Fare ∈ (8.1, 16.87) [size = 23]: 0
-		Fare ∈ (16.87, inf) [size = 19]: 0
-	Age ∈ (20.25, 22.5) [size = 46]: 0
+		Fare ∈ (-inf, 7.76) [size = 25]: 0 [88.0%]
+		Fare ∈ (7.76, 8.1) [size = 22]: 0 [81.82%]
+		Fare ∈ (8.1, 16.87) [size = 23]: 0 [91.3%]
+		Fare ∈ (16.87, inf) [size = 19]: 0 [94.74%]
+	Age ∈ (20.25, 22.5) [size = 46]: 0 [95.65%]
 	Age ∈ (22.5, inf) [size = 397]:
 		========== Fare ==========
 		Fare ∈ (-inf, 13.93) [size = 217]:
 			========== Pclass ==========
-			Pclass [1, 3] [size = 167]: 0
-			Pclass [2] [size = 50]: 0
-		Fare ∈ (13.93, 26.27) [size = 58]: 0
+			Pclass [1, 3] [size = 167]: 0 [88.62%]
+			Pclass [2] [size = 50]: 0 [88.0%]
+		Fare ∈ (13.93, 26.27) [size = 58]: 0 [94.83%]
 		Fare ∈ (26.27, 52.28) [size = 72]:
 			========== Siblings/Spouses Aboard ==========
-			Siblings/Spouses Aboard [1] [size = 12]: 0
-			Siblings/Spouses Aboard [0] [size = 60]: 0
-		Fare ∈ (52.28, inf) [size = 50]: 0
+			Siblings/Spouses Aboard [1] [size = 12]: 0 [91.67%]
+			Siblings/Spouses Aboard [0] [size = 60]: 0 [61.67%]
+		Fare ∈ (52.28, inf) [size = 50]: 0 [56.0%]
 Sex ['female'] [size = 314]:
 	========== Pclass ==========
 	Pclass [3] [size = 143]:
 		========== Fare ==========
-		Fare ∈ (-inf, 7.74) [size = 14]: 1
-		Fare ∈ (7.74, 7.89) [size = 28]: 1
+		Fare ∈ (-inf, 7.74) [size = 14]: 1 [78.57%]
+		Fare ∈ (7.74, 7.89) [size = 28]: 1 [67.86%]
 		Fare ∈ (7.89, 23.35) [size = 74]:
 			========== Parents/Children Aboard ==========
-			Parents/Children Aboard [4, 0] [size = 43]: 0
+			Parents/Children Aboard [4, 0] [size = 43]: 0 [58.14%]
 			Parents/Children Aboard [1] [size = 21]:
 				========== Siblings/Spouses Aboard ==========
-				Siblings/Spouses Aboard [3, 1] [size = 11]: 0
-				Siblings/Spouses Aboard [0, 2] [size = 10]: 1
-			Parents/Children Aboard [2, 3] [size = 10]: 1
-		Fare ∈ (23.35, inf) [size = 27]: 0
-	Pclass [2] [size = 76]: 1
-	Pclass [1, 4] [size = 95]: 1
+				Siblings/Spouses Aboard [3, 1] [size = 11]: 0 [54.55%]
+				Siblings/Spouses Aboard [0, 2] [size = 10]: 1 [70.0%]
+			Parents/Children Aboard [2, 3] [size = 10]: 1 [80.0%]
+		Fare ∈ (23.35, inf) [size = 27]: 0 [88.89%]
+	Pclass [2] [size = 76]: 1 [92.11%]
+	Pclass [1, 4] [size = 95]: 1 [96.84%]

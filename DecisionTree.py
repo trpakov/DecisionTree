@@ -364,20 +364,20 @@ class Node:
             if self.threshold is None:
                 if childNode.dataRange is None:
                     if childNode.isLeafNode:
-                        print(indentation + str(self.name) + ' ' + str(childNode.data.loc[:, self.name].unique().tolist()) + ' [size = ' + str(len(childNode.data)) + ']' + ": " + str(childNode.name), file=file)
+                        print(indentation + str(self.name) + ' ' + str(childNode.data.loc[:, self.name].unique().tolist()) + ' [size = ' + str(len(childNode.data)) + ']' + ": " + str(childNode.name) + ' [' + str(round(100 * len(childNode.data.loc[childNode.data.iloc[:, -1] == childNode.name])/len(childNode.data), 2)) + '%]', file=file)
                     else:
                         print(indentation + str(self.name) + ' ' + str(childNode.data.loc[:, self.name].unique().tolist()) + ' [size = ' + str(len(childNode.data)) + ']' + ":", file=file)
                         childNode.print(indentation + '\t' * numOfTabsBetweenLevels, numOfTabsBetweenLevels, file=file)
                 else:
                     if childNode.isLeafNode:
-                        print(indentation + str(self.name) + ' \u2208 ' + str(childNode.dataRange) + ' [size = ' + str(len(childNode.data)) + ']' + ": " + str(childNode.name), file=file)
+                        print(indentation + str(self.name) + ' \u2208 ' + str(childNode.dataRange) + ' [size = ' + str(len(childNode.data)) + ']' + ": " + str(childNode.name) + ' [' + str(round(100 * len(childNode.data.loc[childNode.data.iloc[:, -1] == childNode.name])/len(childNode.data), 2)) + '%]', file=file)
                     else:
                         print(indentation + str(self.name) + ' \u2208 ' + str(childNode.dataRange) + ' [size = ' + str(len(childNode.data)) + ']' + ":", file=file)
                         childNode.print(indentation + '\t' * numOfTabsBetweenLevels, numOfTabsBetweenLevels, file=file)
             else:
                 if childNode.isLeafNode:
                     print(indentation + str(self.name) + " [" + ['<= ', '> '][index] + str(
-                        self.threshold) + "]" + ' [size = ' + str(len(childNode.data)) + ']' + ": " + str(childNode.name), file=file)
+                        self.threshold) + "]" + ' [size = ' + str(len(childNode.data)) + ']' + ": " + str(childNode.name) + ' [' + str(round(100 * len(childNode.data.loc[childNode.data.iloc[:, -1] == childNode.name])/len(childNode.data), 2)) + '%]', file=file)
                 else:
                     print(indentation + str(self.name) + " [" + ['<= ', '> '][index] + str(self.threshold) + "]" + ' [size = ' + str(len(childNode.data)) + ']' + ":", file=file)
                     childNode.print(indentation + '\t' * numOfTabsBetweenLevels, numOfTabsBetweenLevels, file=file)
