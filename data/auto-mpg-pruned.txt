@@ -1,0 +1,15 @@
+========== weight ==========
+weight ∈ (-inf, 2080.0) [size = 59]: 33.056
+weight ∈ (2080.0, 2764.5) [size = 135]:
+	========== horsepower ==========
+	horsepower ∈ (-inf, 78.5) [size = 48]: 31.383
+	horsepower ∈ (78.5, 90.5) [size = 50]: 26.88
+	horsepower ∈ (90.5, 102.5) [size = 27]: 25.096
+	horsepower ∈ (102.5, inf) [size = 10]: 24.13
+weight ∈ (2764.5, 4361.5) [size = 173]:
+	========== horsepower ==========
+	horsepower ∈ (-inf, 101.0) [size = 64]: 21.358
+	horsepower ∈ (101.0, 127.0) [size = 42]: 19.752
+	horsepower ∈ (127.0, 172.5) [size = 56]: 15.852
+	horsepower ∈ (172.5, inf) [size = 11]: 14.227
+weight ∈ (4361.5, inf) [size = 31]: 12.855

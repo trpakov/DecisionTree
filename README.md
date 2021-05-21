@@ -204,6 +204,15 @@ Tree function GenerateTree(dataset D)
     ##### Returns
     * `informationGain (float)` - Increase in information produced by partitioning `data` into `dataSubsets`.
 
+* `calculateStandardDeviationReduction(data, dataSubsets)` - Calculates the standard deviation reduction based on the decrease in standard deviation after a dataset is split on an attribute.
+
+    ##### Parameters
+    * `data (pandas.DataFrame)` - Dataframe to use.
+    * `dataSubsets list((pandas.DataFrame))` - Dataframes resulting from a split.
+
+    ##### Returns
+    * `stdReduction (float)` - Difference between standard deviation for values in `data` and weighted standard deviation for values in `dataSubsets`.
+
 * `calculateMeasureOfGoodness(data, dataSubsets)` - Calculates a value that seeks to optimize the balance of a candidate split's capacity to create pure children with its capacity to create equally-sized children.
 
     ##### Parameters

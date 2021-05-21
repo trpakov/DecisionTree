@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from math import log2, prod
 from operator import itemgetter
-from optbinning import OptimalBinning, MulticlassOptimalBinning
+from optbinning import OptimalBinning, MulticlassOptimalBinning, ContinuousOptimalBinning
 from ast import literal_eval
 from collections import Counter
 
@@ -19,6 +19,12 @@ class DecisionTreeGenerator:
         self.numOfLeafNodes = 0 # number of terminal nodes
         self.twigs = {} # dict with nodes that have only leaf nodes (keys) and their info gain (values)
         self.numericAttrRanges = {x: [[[(-np.inf, np.inf)]], 0] for x in self.inputVars} # dict with parent ranges for repeating numeric attributes, used when repeatAttributes is True
+
+        # set tree type
+        if str(data.iloc[:, -1].dtype) == 'object' or str(data.iloc[:, -1].dtype) == 'category':
+            self.treeType = 'classification'
+        else:
+            self.treeType = 'regression'
 
     def checkIfOnlyOneClass(self, data):
         '''Check if all entries in given dataframe belong to the same class, if true - return class name'''
@@ -59,6 +65,13 @@ class DecisionTreeGenerator:
 
         informationGain = entropyBeforeSplit - weightedSumOfEntropies
         return informationGain
+
+    def calculateStandardDeviationReduction(self, data, dataSubsets):
+        standartDeviations = [np.std(subset.iloc[:, -1]) for subset in dataSubsets]
+        probabilities = [len(subset)/len(data) for subset in dataSubsets]
+        stdAfterSplit = sum(x * y for x, y in zip(probabilities, standartDeviations))
+        stdBeforeSplit = np.std(data.iloc[:, -1])
+        return stdBeforeSplit - stdAfterSplit
 
     def getNumberOfRecordsInClass(self, data, cls):
         '''Returns the number of entries in the dataframe, belonging to the specified class name'''
@@ -112,9 +125,14 @@ class DecisionTreeGenerator:
                 grouped = data.groupby(attr)
                 # get values for binning
                 x = data[attr].values
-                y = data.iloc[:, -1].astype('category').cat.codes.values
+                y = data.iloc[:, -1].values
 
-                optb = OptimalBinning(dtype='categorical', min_n_bins = 2, max_n_bins=4)
+                # type of binning is determined by tree type
+                if self.treeType == 'classification':
+                    optb = OptimalBinning(dtype='categorical', min_n_bins = 2, max_n_bins=4)
+                else:                  
+                    optb = ContinuousOptimalBinning(dtype='categorical', min_n_bins = 2, max_n_bins=4, min_prebin_size=0.001)
+                    
                 optb.fit(x, y)
                 binningResultDt = optb.binning_table.build()
                 bins = binningResultDt['Bin'].head(-3)
@@ -129,7 +147,10 @@ class DecisionTreeGenerator:
                 if any(len(subset) for subset in subsets if len(subset) < minNumRecordsLeafNode):
                     continue # skip if there are too small subsets
 
-                infoGain = self.calculateInformationGain(data, subsets)
+                if self.treeType == 'classification':
+                    infoGain = self.calculateInformationGain(data, subsets)
+                else:
+                    infoGain = self.calculateStandardDeviationReduction(data, subsets)
 
                 if infoGain >= bestGain:
                     bestGain = infoGain
@@ -144,7 +165,13 @@ class DecisionTreeGenerator:
                 x = data[attr].values
                 y = data.iloc[:, -1].values
 
-                optb = MulticlassOptimalBinning(min_n_bins=2, max_n_bins=4)
+                # type of binning is determined by tree type
+                if self.treeType == 'classification':
+                    optb = MulticlassOptimalBinning(min_n_bins=2, max_n_bins=4)
+                else:
+                    if x.min() == x.max(): continue
+                    optb = ContinuousOptimalBinning(min_n_bins=2, max_n_bins=4,min_prebin_size=0.001)
+                
                 optb.fit(x, y)
                 binningResultDt = optb.binning_table.build()
                 bins = binningResultDt['Bin'].head(-3)
@@ -167,7 +194,10 @@ class DecisionTreeGenerator:
                     if any(len(subset) for subset in subsets if len(subset) < minNumRecordsLeafNode):
                         continue # skip if there are too small subsets
 
-                    infoGain = self.calculateInformationGain(data, subsets)
+                    if self.treeType == 'classification':
+                        infoGain = self.calculateInformationGain(data, subsets)
+                    else:
+                        infoGain = self.calculateStandardDeviationReduction(data, subsets)
 
                     if infoGain >= bestGain:
                         bestGain = infoGain
@@ -189,7 +219,10 @@ class DecisionTreeGenerator:
                         if len(lowerSubset) < minNumRecordsLeafNode or len(higherSubset) < minNumRecordsLeafNode:
                             continue # skip if there are too small subsets
 
-                        infoGain = self.calculateInformationGain(sortedData, [lowerSubset, higherSubset])
+                        if self.treeType == 'classification':
+                            infoGain = self.calculateInformationGain(data, [lowerSubset, higherSubset])
+                        else:
+                            infoGain = self.calculateStandardDeviationReduction(data, [lowerSubset, higherSubset])
 
                         if infoGain > bestGain:
                             bestGain = infoGain
@@ -232,19 +265,30 @@ class DecisionTreeGenerator:
 
         if len(availableAttributes) == 0:
             self.numOfLeafNodes += 1
-            clasWithMostRecords = self.getClassWithMostRecords(data)
-            return Node(name=clasWithMostRecords, threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
+            if self.treeType == 'classification':
+                clasWithMostRecords = self.getClassWithMostRecords(data)
+                return Node(name=clasWithMostRecords, threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
+            else:
+                averageValue = np.mean(data.iloc[:, -1])
+                return Node(name=averageValue, threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
 
         # if len(data) <= maxNumRecordsToSkipSplitting:
         #     self.numOfLeafNodes += 1
         #     clasWithMostRecords = self.getClassWithMostRecords(data)
         #     return Node(name=clasWithMostRecords, threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
 
-        # if more than 90% of the records in data belong to the same class
-        if (Counter(data.iloc[:, -1].values).most_common(1)[0][1] / len(data)) * 100 > 90:
-            self.numOfLeafNodes += 1
-            clasWithMostRecords = self.getClassWithMostRecords(data)
-            return Node(name=clasWithMostRecords, threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
+        if self.treeType == 'classification':
+            # if more than 90% of the records in data belong to the same class
+            if (Counter(data.iloc[:, -1].values).most_common(1)[0][1] / len(data)) * 100 > 90:
+                self.numOfLeafNodes += 1
+                clasWithMostRecords = self.getClassWithMostRecords(data)
+                return Node(name=clasWithMostRecords, threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
+        else:
+            # if regression and coefficent of deviation (CV) less than 10%
+            if (np.std(data.iloc[:, -1]) / np.mean(data.iloc[:, -1])) * 100 < 10:
+                self.numOfLeafNodes += 1
+                averageValue = np.mean(data.iloc[:, -1])
+                return Node(name=averageValue, threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
 
         splitResult = self.splitData(data, availableAttributes, numericAttrBinning, repeatAttributes, minNumRecordsLeafNode)
         remainingAvailableAttribues = availableAttributes.copy()
@@ -252,8 +296,13 @@ class DecisionTreeGenerator:
         # if no suitable attribute to split on
         if splitResult[0] is None: 
             self.numOfLeafNodes += 1
-            clasWithMostRecords = self.getClassWithMostRecords(data)
-            return Node(name=clasWithMostRecords, threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
+
+            if self.treeType == 'classification':
+                clasWithMostRecords = self.getClassWithMostRecords(data)
+                return Node(name=clasWithMostRecords, threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
+            else:
+                averageValue = np.mean(data.iloc[:, -1])
+                return Node(name=averageValue, threshold=None, isLeafNode=True, data=data, dataRange=dataRange)
 
         if repeatAttributes is False: # Remove current attribute from available attributes if user does not want repetition
             remainingAvailableAttribues.remove(splitResult[0])
@@ -300,8 +349,11 @@ class DecisionTreeGenerator:
             self.numOfLeafNodes -= (len(nodeWithLowestGain.childNodes) - 1)
             nodeWithLowestGain.gain = None
             nodeWithLowestGain.childNodes = [] # no more child nodes
-            # change node name to class with most records
-            nodeWithLowestGain.name = self.getClassWithMostRecords(nodeWithLowestGain.data)
+            # change node name
+            if self.treeType == 'classification':
+                nodeWithLowestGain.name = self.getClassWithMostRecords(nodeWithLowestGain.data)
+            else:
+                nodeWithLowestGain.name = np.mean(nodeWithLowestGain.data.iloc[:, -1])
             #print('num of leaf nodes: ' + str(self.numOfLeafNodes))
 
     def traverseTree(self, row, node=None):
@@ -364,20 +416,20 @@ class Node:
             if self.threshold is None:
                 if childNode.dataRange is None:
                     if childNode.isLeafNode:
-                        print(indentation + str(self.name) + ' ' + str(childNode.data.loc[:, self.name].unique().tolist()) + ' [size = ' + str(len(childNode.data)) + ']' + ": " + str(childNode.name) + ' [' + str(round(100 * len(childNode.data.loc[childNode.data.iloc[:, -1] == childNode.name])/len(childNode.data), 2)) + '%]', file=file)
+                        print(indentation + str(self.name) + ' ' + str(childNode.data.loc[:, self.name].unique().tolist()) + ' [size = ' + str(len(childNode.data)) + ']' + ": " + (str(childNode.name) if str(childNode.data.iloc[:, -1].dtype) in ['object', 'category'] else str(round(childNode.name, 3))) + (' [' + str(round(100 * len(childNode.data.loc[childNode.data.iloc[:, -1] == childNode.name])/len(childNode.data), 2)) + '%]' if str(childNode.data.iloc[:, -1].dtype) in ['object', 'category'] else ''), file=file)
                     else:
                         print(indentation + str(self.name) + ' ' + str(childNode.data.loc[:, self.name].unique().tolist()) + ' [size = ' + str(len(childNode.data)) + ']' + ":", file=file)
                         childNode.print(indentation + '\t' * numOfTabsBetweenLevels, numOfTabsBetweenLevels, file=file)
                 else:
                     if childNode.isLeafNode:
-                        print(indentation + str(self.name) + ' \u2208 ' + str(childNode.dataRange) + ' [size = ' + str(len(childNode.data)) + ']' + ": " + str(childNode.name) + ' [' + str(round(100 * len(childNode.data.loc[childNode.data.iloc[:, -1] == childNode.name])/len(childNode.data), 2)) + '%]', file=file)
+                        print(indentation + str(self.name) + ' \u2208 ' + str(childNode.dataRange) + ' [size = ' + str(len(childNode.data)) + ']' + ": " + (str(childNode.name) if str(childNode.data.iloc[:, -1].dtype) in ['object', 'category'] else str(round(childNode.name, 3))) + (' [' + str(round(100 * len(childNode.data.loc[childNode.data.iloc[:, -1] == childNode.name])/len(childNode.data), 2)) + '%]' if str(childNode.data.iloc[:, -1].dtype) in ['object', 'category'] else ''), file=file)
                     else:
                         print(indentation + str(self.name) + ' \u2208 ' + str(childNode.dataRange) + ' [size = ' + str(len(childNode.data)) + ']' + ":", file=file)
                         childNode.print(indentation + '\t' * numOfTabsBetweenLevels, numOfTabsBetweenLevels, file=file)
             else:
                 if childNode.isLeafNode:
                     print(indentation + str(self.name) + " [" + ['<= ', '> '][index] + str(
-                        self.threshold) + "]" + ' [size = ' + str(len(childNode.data)) + ']' + ": " + str(childNode.name) + ' [' + str(round(100 * len(childNode.data.loc[childNode.data.iloc[:, -1] == childNode.name])/len(childNode.data), 2)) + '%]', file=file)
+                        self.threshold) + "]" + ' [size = ' + str(len(childNode.data)) + ']' + ": " + (str(childNode.name) if str(childNode.data.iloc[:, -1].dtype) in ['object', 'category'] else str(round(childNode.name, 3))) + (' [' + str(round(100 * len(childNode.data.loc[childNode.data.iloc[:, -1] == childNode.name])/len(childNode.data), 2)) + '%]' if str(childNode.data.iloc[:, -1].dtype) in ['object', 'category'] else ''), file=file)
                 else:
                     print(indentation + str(self.name) + " [" + ['<= ', '> '][index] + str(self.threshold) + "]" + ' [size = ' + str(len(childNode.data)) + ']' + ":", file=file)
                     childNode.print(indentation + '\t' * numOfTabsBetweenLevels, numOfTabsBetweenLevels, file=file)

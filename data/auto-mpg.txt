@@ -1,0 +1,29 @@
+========== weight ==========
+weight ∈ (-inf, 2080.0) [size = 59]: 33.056
+weight ∈ (2080.0, 2764.5) [size = 135]:
+	========== horsepower ==========
+	horsepower ∈ (-inf, 78.5) [size = 48]:
+		========== origin ==========
+		origin [1] [size = 16]: 29.394
+		origin [2] [size = 17]: 31.694
+		origin [3] [size = 15]: 33.153
+	horsepower ∈ (78.5, 90.5) [size = 50]:
+		========== accerelation ==========
+		accerelation ∈ (-inf, 14.9) [size = 12]: 28.708
+		accerelation ∈ (14.9, 15.75) [size = 11]: 27.5
+		accerelation ∈ (15.75, 16.7) [size = 13]: 26.077
+		accerelation ∈ (16.7, inf) [size = 14]: 25.571
+	horsepower ∈ (90.5, 102.5) [size = 27]: 25.096
+	horsepower ∈ (102.5, inf) [size = 10]: 24.13
+weight ∈ (2764.5, 4361.5) [size = 173]:
+	========== horsepower ==========
+	horsepower ∈ (-inf, 101.0) [size = 64]:
+		========== accerelation ==========
+		accerelation ∈ (-inf, 15.55) [size = 13]: 19.738
+		accerelation ∈ (15.55, 17.25) [size = 21]: 20.89
+		accerelation ∈ (17.25, 18.45) [size = 13]: 21.462
+		accerelation ∈ (18.45, inf) [size = 17]: 23.094
+	horsepower ∈ (101.0, 127.0) [size = 42]: 19.752
+	horsepower ∈ (127.0, 172.5) [size = 56]: 15.852
+	horsepower ∈ (172.5, inf) [size = 11]: 14.227
+weight ∈ (4361.5, inf) [size = 31]: 12.855
