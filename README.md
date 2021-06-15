@@ -1,6 +1,6 @@
 # DecisionTree
 
-DecisionTree is a variat of C4.5 decision tree algorithm implemented in Python. Developed as an assignment in Applied Artificial Intelligence course.
+DecisionTree is a variant of C4.5 decision tree algorithm implemented in Python. Developed as an assignment in Applied Artificial Intelligence course.
 
 ## Features
 
@@ -8,7 +8,7 @@ DecisionTree is a variat of C4.5 decision tree algorithm implemented in Python. 
 * Uses information gain to determine the best split.
 * Utilizes [OptBinning](https://github.com/guillermo-navas-palencia/optbinning) to find optimal binning for given attribute.
 * Prunes the tree until leaf nodes are fewer than specified threshold.
-* Classifies test data based on tree generated from tarining data.
+* Classifies test data based on tree generated from training data.
 * Provides additional methods for data preparation.
 
 ## Installation
@@ -176,7 +176,7 @@ Tree function GenerateTree(dataset D)
     * `data (pandas.DataFrame)` - Dataframe to use.
 
     ##### Returns
-    * `className (str)` - Name of tha class with most records in the dataframe.
+    * `className (str)` - Name of the class with most records in the dataframe.
 
 * `getNumberOfRecordsInClass(data, cls)` - Finds and returns the number of entries in the dataframe, belonging to the specified class name.
 
@@ -397,11 +397,11 @@ categorical the method adds the branches names of the root in branches_names. Fo
 names for numeric nodes are not as simple as the names of categorical nodes. The names of the numeric nodes can be intervals, like 'Age ∈ (20.25, 22.5)' or just one or two
 values, for example 'Age [23]' or 'Age [23, 33]'. All the branches names are added in such way in the list so that we can use them as if statements. For example the 
 branch_name 'Age ∈ (20.25, 22.5)' in the three will be added in the list as '22 > 20.25 and 22 < 22.5', where '22' is the actual 'Age' of the current node. Then after we
-have the branches names of the current node in the list out method starts itterating through the rows of the dataset. If the current node is categorical we are checking
-whether the current row value branch is leaf. If it is leaf, we are adding the value of the leaf to the last column on the row (we are classificating the record) and we are 
-calling out method again with the treeRoot for the next row.If it is not leaf we are recursively calling the method with the non leaf node. If the current node is numeric our 
-method starts itterating through branches names. For each branch name our method replaces node name in branch name with row value, so that we have 'ROW_VALUE > 20.25 and
+have the branches names of the current node in the list out method starts iterating through the rows of the dataset. If the current node is categorical we are checking
+whether the current row value branch is leaf. If it is leaf, we are adding the value of the leaf to the last column on the row (we are classifying the record) and we are 
+calling out method again with the treeRoot for the next row. If it is not leaf we are recursively calling the method with the non-leaf node. If the current node is numeric our 
+method starts iterating through branches names. For each branch name our method replaces node name in branch name with row value, so that we have 'ROW_VALUE > 20.25 and
 ROW_VALUE < 22.5' instead of 'Age > 20.25 and Age < 22.5' for example. The next step in our method is to use the branch name as an if statement. If the if statement passes,
 i.e. if our ROW_VALUE is bigger than 20.25 and smaller than 22.5 for example, we are checking whether the child that the branch led us to is a leaf. If it is leaf, we are
-adding the value of the leaf to the last column on the row (we are classificating the record) and we are calling out method again with the treeRoot for the next row. If it is
+adding the value of the leaf to the last column on the row (we are classifying the record) and we are calling out method again with the treeRoot for the next row. If it is
 not leaf we are recursively calling the method with the non leaf node.
