@@ -1,6 +1,6 @@
 # DecisionTree
 
-DecisionTree is a variat of C4.5 decision tree algorithm implemented in Python. Developed as an assignment in Applied Artificial Intelligence course.
+DecisionTree is a variant of C4.5 decision tree algorithm implemented in Python. Developed as an assignment in Applied Artificial Intelligence course.
 
 ## Features
 
